@@ -9,3 +9,4 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient()
   ]
 };
+const constUrl="http://localhost:5188/api";
