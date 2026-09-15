@@ -14,12 +14,21 @@ export class Signup {
   password = '';
   email = '';
 
-  errorMessage = signal('');
   infoMessage = signal('');
+  errorMessage = signal('');
+  usernameError = signal('');
+  passwordError = signal('');
+  emailError = signal('');
 
   constructor(private authService: AuthService) {}
 
   signup() {
+    this.errorMessage.set('');
+    this.infoMessage.set('');
+    this.usernameError.set('');
+    this.passwordError.set('');
+    this.emailError.set('');
+
     if (!this.username || !this.password || !this.email) {
       this.errorMessage.set('Username, password, and email are required.');
       return;
@@ -36,20 +45,17 @@ export class Signup {
       },
 
       error: (error) => {
-        this.infoMessage.set('');
-        console.error('Signup failed:', error);
+        if (error.status === 400 && error.error?.errors) {
+          const errors = error.error.errors;
 
-        if (error.status === 409) {
-          this.errorMessage.set(
-            error.error?.detail ??
-            'Username already exists. -_-'
-          );
-        } else {
-          this.errorMessage.set(
-            error.error?.detail ??
-            'Signup failed. Please try again.'
-          );
+          this.usernameError.set(errors.Username?.[0] ?? '');
+          this.passwordError.set(errors.Password?.[0] ?? '');
+          this.emailError.set(errors.Email?.[0] ?? '');
+
+          return;
         }
+
+        this.errorMessage.set(error.error?.detail ?? 'Signup failed. Please try again.');
       }
     });
   }

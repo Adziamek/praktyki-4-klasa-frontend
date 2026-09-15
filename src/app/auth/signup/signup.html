@@ -6,16 +6,34 @@
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
             <input type="text" class="form-control" id="username" [(ngModel)]="username" name="username" required>
+
+            @if (usernameError()) {
+                <div class="text-danger">
+                    {{ usernameError() }}
+                </div>
+            }
         </div>
 
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password" required>
+
+            @if (passwordError()) {
+                <div class="text-danger">
+                    {{ passwordError() }}
+                </div>
+            }
         </div>
 
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email" required>
+
+            @if (emailError()) {
+                <div class="text-danger">
+                    {{ emailError() }}
+                </div>
+            }
         </div>
 
         <div class="mb-3">
