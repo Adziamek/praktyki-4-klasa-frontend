@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from './product';
-import { environment } from '../../environments/environment';
+import { environment } from '../environments/environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 export class ProductService {
   private http = inject(HttpClient);
 
-  private apiUrl =`${environment.apiUrl}/products`;
+  private apiUrl =`${environment.apiProducts}`;
 
   getProducts() {
     return this.http.get<Product[]>(this.apiUrl);

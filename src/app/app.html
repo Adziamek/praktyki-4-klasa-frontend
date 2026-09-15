@@ -1,11 +1,1 @@
-<h1>Warehouse</h1>
-
-<p>Liczba produktów: {{ products.length }}</p>
-
-@for (product of products; track product.id) {
-  <p>
-    ID: {{ product.id }} |
-    Nazwa: {{ product.name }} |
-    EAN: {{ product.ean }}
-  </p>
-}
+<router-outlet></router-outlet>
