@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment/environment';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -33,16 +35,29 @@ export class AuthService {
         return localStorage.getItem('token');
     }
 
-    logout() {
+    removeToken() {
         localStorage.removeItem('token');
     }
 
-    isLoggedIn(): boolean {
-        return this.getToken() !== null;
+    isLoggedIn(): Observable<boolean> {
+        const token = this.getToken();
+
+        if (!token) {
+            console.log('No token found');
+            return of(false);
+        }
+
+        return this.http.get(`${this.api}/me`).pipe(
+            map(() => true),
+            catchError(() => {
+                this.removeToken();
+                return of(false);
+            })
+        )
     }
 
     getUsername(): string | null {
-        const token = this.getToken()
+        const token = this.getToken();
         
         if (!token) {
             console.log('No token found');
@@ -51,8 +66,6 @@ export class AuthService {
 
         try {
             const payload = JSON.parse(atob(token.split('.')[1]));
-
-            console.log('Decoded payload:', payload);
 
             return payload.username ?? null;
         } catch(error) {
