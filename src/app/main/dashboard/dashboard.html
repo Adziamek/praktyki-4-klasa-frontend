@@ -1,0 +1,31 @@
+<div class="d-flex justify-content-center align-items-center" style="height: 25vh;">
+    @if (username) {
+        <h2 class="alert alert-info" id="message">Hi, {{ username }}.</h2>
+    } @else {
+        <h2 class="alert alert-info" id="message">Please log in to continue.</h2>
+    }
+    
+</div>
+
+<div class="mx-auto" style="width: 90%;">
+    <p>Liczba produktów: {{ products.length }}</p>
+
+    <table class="table w-30">
+    <thead>
+        <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">EAN</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (product of products; track product.id) {
+        <tr>
+        <th scope="row">{{ product.id }}</th>
+        <td>{{ product.name }}</td>
+        <td>{{ product.ean }}</td>
+        }
+    </tbody>
+    </table>
+
+</div>
