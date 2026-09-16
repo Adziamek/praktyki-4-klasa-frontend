@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../auth-service';
+import { AuthService } from '../../service/auth-service/auth-service';
 
 @Component({
   imports: [RouterLink, FormsModule],

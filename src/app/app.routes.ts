@@ -1,7 +1,12 @@
 import { Routes } from '@angular/router';
+import { Login } from './auth/login/login';
 import { Signup } from './auth/signup/signup';
 import { authGuard } from './auth/auth.guard';
+
+import { MainLayout } from './layouts/main-layout/main-layout';
 import { Dashboard } from './main/dashboard/dashboard';
+import { Locations } from './main/locations/locations';
+import { Settings } from './main/settings/settings';
 
 export const routes: Routes = [
     {
@@ -11,16 +16,31 @@ export const routes: Routes = [
     },
     {
         path: 'login',
-        loadComponent: () =>
-            import('./auth/login/login').then(m => m.Login)
+        component: Login,
     },
     {
         path: 'signup',
         component: Signup
     },
     {
-        path: 'dashboard',
-        component: Dashboard,
-        canActivate: [authGuard]
+        path: '',
+        component: MainLayout,
+        children: [
+            {
+                path: 'dashboard',
+                component: Dashboard,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'locations',
+                component: Locations,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'settings',
+                component: Settings,
+                canActivate: [authGuard]
+            }
+        ]
     }
 ];

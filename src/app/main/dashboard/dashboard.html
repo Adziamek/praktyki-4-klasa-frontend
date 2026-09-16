@@ -7,25 +7,10 @@
     
 </div>
 
-<div class="mx-auto" style="width: 90%;">
-    <p>Liczba produktów: {{ products.length }}</p>
-
-    <table class="table w-30">
-    <thead>
-        <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">EAN</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (product of products; track product.id) {
-        <tr>
-        <th scope="row">{{ product.id }}</th>
-        <td>{{ product.name }}</td>
-        <td>{{ product.ean }}</td>
-        }
-    </tbody>
-    </table>
-
+<div class="mx-5">
+    <h2>Summary:</h2>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Amount of products: {{ productsCount }}</li>
+        <li class="list-group-item">Amount of locations: {{ locationsCount }}</li>
+    </ul>
 </div>

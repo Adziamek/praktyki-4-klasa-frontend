@@ -1,0 +1,89 @@
+<!-- -------- Form -------- -->
+<div
+    class="location-panel position-fixed top-0 start-0 h-100 bg-white shadow"
+    [class.open]="isOpen()">
+
+    <button
+        class="toggle-button btn btn-primary position-absolute top-50"
+        (click)="isOpen.update(value => !value)">
+        {{ isOpen() ? '<' : '>' }}
+    </button>
+
+    <div class="p-4">
+        <h5 class="mb-3">Add Location</h5>
+
+        <form (ngSubmit)="addLocation()">
+            <app-input-string 
+                label="Code"
+                id="code"
+                name="code"
+                placeholder="L-XXX"
+                [error]="codeError()"
+                [(ngModel)]="code"
+            />
+
+            <app-input-string 
+                label="Warehouse Code"
+                id="warehouseCode"
+                name="warehouseCode"
+                placeholder="WH-XX"
+                [error]="warehouseCodeError()"
+                [(ngModel)]="warehouseCode"
+            />
+
+            <app-input-string 
+                label="Name"
+                id="name"
+                name="name"
+                [error]="nameError()"
+                [(ngModel)]="name"
+            />
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="isActive">
+                <label class="form-check-label" for="isActive">Is active</label>
+            </div>
+
+            <!-- TODO: Make Component Later -->
+            <button type="submit" class="btn btn-primary w-100 mb-3">
+                Add
+            </button>
+
+            @if (infoMessage()) {
+                <p class="alert alert-info" style="width: auto; height: auto;">{{ infoMessage() }}</p>
+            } @else if (errorMessage()) {
+                <p class="alert alert-danger" style="width: auto; height: auto;">{{ errorMessage() }}</p>
+            }
+        </form>
+    </div>
+
+</div>
+
+<!-- -------- Table -------- -->
+
+<div class="mx-auto" style="width: 90%;">
+    <p>Liczba lokalizacji: {{ locations.length }}</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Code</th>
+                <th scope="col">Warehouse Code</th>
+                <th scope="col">Name</th>
+                <th scope="col">Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (location of locations; track location.id) {
+                <tr>
+                    <th scope="row">{{ location.id }}</th>
+                    <td>{{ location.code }}</td>
+                    <td>{{ location.warehouseCode }}</td>
+                    <td>{{ location.name }}</td>
+                    <td>{{ location.isActive ? '✓' : '✗' }}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

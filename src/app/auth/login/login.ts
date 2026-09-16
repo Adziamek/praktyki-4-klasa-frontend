@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from '../auth-service';
+import { AuthService } from '../../service/auth-service/auth-service';
 
 @Component({
   imports: [RouterLink, FormsModule],
