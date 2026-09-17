@@ -1,0 +1,19 @@
+<header class="d-flex position-fixed flex-wrap justify-content-center py-3 mb-4 px-5 border-bottom bg-white z-1 w-100">
+    <a class="d-flex align-items-center mb-3 mx-5 mb-md-0 me-md-auto text-dark text-decoration-none" routerLink="/dashboard">
+        <span class="fs-4">WMS</span>
+    </a>
+
+    <ul class="nav nav-pills">
+        <app-nav-element navText="Dashboard" routerLink="/dashboard" />
+
+        <app-nav-element navText="Locations" routerLink="/locations" [condition]="isAdministrator() || isWarehouseman()" />
+        
+        <app-nav-element navText="Settings" routerLink="/settings" />
+        
+        <li class="nav-item">
+            <button class="nav-link btn btn-link" type="button" (click)="logout()">Log Out</button>
+        </li>
+    </ul>
+</header>
+
+<div style="height: 90px;"></div>

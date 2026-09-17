@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from '../auth-service';
+import { AuthService } from '../../service/auth-service/auth-service';
+import { InputString } from '../../components/input-string/input-string';
+import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 
 @Component({
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, InputString, InfoErrorBox],
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',

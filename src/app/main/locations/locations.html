@@ -1,0 +1,178 @@
+<!-- -------- Form -------- -->
+<div
+    class="location-panel position-fixed top-0 start-0 h-100 bg-white shadow"
+    [class.open]="isSideOpen()">
+
+    <button
+        class="toggle-button btn btn-primary position-absolute top-50"
+        (click)="openCloseSide()">
+        {{ isSideOpen() ? '<' : '>' }}
+    </button>
+
+    <div class="p-4">
+        <h5 class="mb-3">Add Location</h5>
+
+        <form (ngSubmit)="addLocation()">
+            <app-input-string 
+                label="Code"
+                id="code"
+                name="code"
+                placeholder="L-XXX"
+                [error]="codeError()"
+                [(ngModel)]="addCode"
+            />
+
+            <app-input-string 
+                label="Warehouse Code"
+                id="warehouseCode"
+                name="warehouseCode"
+                placeholder="WH-XX"
+                [error]="warehouseCodeError()"
+                [(ngModel)]="addWarehouseCode"
+            />
+
+            <app-input-string 
+                label="Name"
+                id="name"
+                name="name"
+                [error]="nameError()"
+                [(ngModel)]="addName"
+            />
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="addIsActive">
+                <label class="form-check-label" for="isActive">Is active</label>
+            </div>
+
+            <app-submit-button buttonText="Add" />
+
+            <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
+        </form>
+    </div>
+
+</div>
+
+<!-- -------- Edit -------- -->
+@if (isEditOpen()) {
+    <div class="modal-overlay">
+
+        <div
+            class="modal-window bg-white rounded shadow"
+            (click)="$event.stopPropagation()">
+
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                <h5 class="mb-0">Edit Location</h5>
+                <button
+                        class="btn btn-secondary"
+                        (click)="closeEdit()">
+                        Close
+                    </button>
+            </div>
+
+            <div class="p-3 border-top">
+                <form (ngSubmit)="editLocation()">
+                    <app-input-string 
+                        label="Code"
+                        id="code"
+                        name="code"
+                        placeholder="L-XXX"
+                        [error]="codeError()"
+                        [(ngModel)]="editCode"
+                    />
+
+                    <app-input-string 
+                        label="Warehouse Code"
+                        id="warehouseCode"
+                        name="warehouseCode"
+                        placeholder="WH-XX"
+                        [error]="warehouseCodeError()"
+                        [(ngModel)]="editWarehouseCode"
+                    />
+
+                    <app-input-string 
+                        label="Name"
+                        id="name"
+                        name="name"
+                        [error]="nameError()"
+                        [(ngModel)]="editName"
+                    />
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="editIsActive">
+                        <label class="form-check-label" for="isActive">Is active</label>
+                    </div>
+
+                    <app-submit-button buttonText="Edit" />
+
+                    <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<!-- -------- Delete -------- -->
+@if (isDeleteOpen()) {
+    <div class="modal-overlay">
+
+        <div
+            class="modal-window bg-white rounded shadow"
+            (click)="$event.stopPropagation()">
+
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                <h5 class="mb-0">Delete Location</h5>
+                <button
+                        class="btn btn-secondary"
+                        (click)="closeDelete()">
+                        Close
+                    </button>
+            </div>
+
+            <div class="p-3 border-top text-center">
+                @if (!infoMessage() && !errorMessage()) {
+                    <p>Are you sure?</p>
+
+                    <button class="btn btn-danger" (click)="deleteLocation();">Delete</button>
+                } @else {
+                    <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
+                }
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<!-- -------- Table -------- -->
+<div class="mx-auto" style="width: 90%;">
+    <p>Liczba lokalizacji: {{ locations.length }}</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Code</th>
+                <th scope="col">Warehouse Code</th>
+                <th scope="col">Name</th>
+                <th scope="col">Active</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (location of locations; track location.id) {
+                <tr>
+                    <th scope="row">{{ location.id }}</th>
+                    <td>{{ location.code }}</td>
+                    <td>{{ location.warehouseCode }}</td>
+                    <td>{{ location.name }}</td>
+                    <td>{{ location.isActive ? '✓' : '✗' }}</td>
+                    <td><button class="btn btn-secondary" (click)="openEdit(location.id);">✎</button></td>
+                    <td><button class="btn btn-danger" (click)="openDelete(location.id);">🗑︎</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -14,4 +14,11 @@ export class ProductService {
   getProducts() {
     return this.http.get<Product[]>(this.apiUrl);
   }
+  createProduct(name: string, ean: string, categoryId: number) {
+    return this.http.post<Product>(`${environment.apiProducts}/add`, {
+      name,
+      ean,
+      categoryId
+    });
+  }
 }

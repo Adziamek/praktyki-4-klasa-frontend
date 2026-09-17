@@ -1,7 +1,13 @@
 import { Routes } from '@angular/router';
-import { Signup } from './auth/signup/signup';
 import { authGuard } from './auth/auth.guard';
+import { Roles } from './environments/role/roles';
+
+import { Login } from './auth/login/login';
+import { Signup } from './auth/signup/signup';
+import { MainLayout } from './layouts/main-layout/main-layout';
 import { Dashboard } from './main/dashboard/dashboard';
+import { Locations } from './main/locations/locations';
+import { Settings } from './main/settings/settings';
 
 export const routes: Routes = [
     {
@@ -11,16 +17,37 @@ export const routes: Routes = [
     },
     {
         path: 'login',
-        loadComponent: () =>
-            import('./auth/login/login').then(m => m.Login)
+        component: Login,
     },
     {
         path: 'signup',
         component: Signup
     },
     {
-        path: 'dashboard',
-        component: Dashboard,
-        canActivate: [authGuard]
+        path: '',
+        component: MainLayout,
+        children: [
+            {
+                path: 'dashboard',
+                component: Dashboard,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'locations',
+                component: Locations,
+                canActivate: [authGuard],
+                data: {
+                    roles: [
+                        Roles.Administrator,
+                        Roles.Warehouseman
+                    ]
+                }
+            },
+            {
+                path: 'settings',
+                component: Settings,
+                canActivate: [authGuard]
+            }
+        ]
     }
 ];
