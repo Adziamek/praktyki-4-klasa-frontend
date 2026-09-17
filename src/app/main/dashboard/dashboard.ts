@@ -17,6 +17,8 @@ export class Dashboard {
   private changeDetector = inject(ChangeDetectorRef);
 
   username: string | null = null;
+  products: Product[] = [];
+  errorMessage: string | null = null;
   productsCount = 0;
   locationsCount = 0;
 
@@ -25,25 +27,25 @@ export class Dashboard {
 
     this.productService.getProducts().subscribe({
       next: products => {
-        console.log('API ZWRÓCIŁO:', products);
-        console.log('ILE:', products.length);
-
+        this.products = products;
         this.productsCount = products.length;
+        this.changeDetector.detectChanges();
+      },
+      error: error => {
+        this.errorMessage = 'Nie udało się pobrać listy produktów.';
+        console.error('Error:', error);
+        this.changeDetector.detectChanges();
+      },
+    });
+
+    this.locationsService.getAllLocations().subscribe({
+      next: locations => {
+        this.locationsCount = locations.length;
         this.changeDetector.detectChanges();
       },
       error: error => {
         console.error('Error:', error);
       }
     });
-
-    this.locationsService.getAllLocations().subscribe({
-      next: locations => {
-          this.locationsCount = locations.length;
-          this.changeDetector.detectChanges()
-      },
-      error: error => {
-        console.error('Error:', error);
-      }
-    })
   }
 }
