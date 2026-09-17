@@ -3,52 +3,37 @@
 
         <h2 class="text-center mb-4">Sign Up</h2>
 
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" [(ngModel)]="username" name="username" required>
+        <app-input-string 
+            label="Username"
+            id="username"
+            name="username"
+            [error]="usernameError()"
+            [(ngModel)]="username"
+        />
 
-            @if (usernameError()) {
-                <div class="text-danger">
-                    {{ usernameError() }}
-                </div>
-            }
-        </div>
+        <app-input-string 
+            label="Password"
+            id="password"
+            name="password"
+            type="password"
+            [error]="passwordError()"
+            [(ngModel)]="password"
+        />
 
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password" required>
-
-            @if (passwordError()) {
-                <div class="text-danger">
-                    {{ passwordError() }}
-                </div>
-            }
-        </div>
-
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email" required>
-
-            @if (emailError()) {
-                <div class="text-danger">
-                    {{ emailError() }}
-                </div>
-            }
-        </div>
+        <app-input-string 
+            label="Email"
+            id="email"
+            name="email"
+            type="email"
+            [error]="emailError()"
+            [(ngModel)]="email"
+        />
 
         <div class="mb-3">
             <p class="text-center"><a routerLink="/login">Log In</a></p>
         </div>
 
-        @if (errorMessage()) {
-            <div class="alert alert-danger text-center">
-                {{ errorMessage() }}
-            </div>
-        } @else if (infoMessage()) {
-            <div class="alert alert-info text-center">
-                {{ infoMessage() }}
-            </div>
-        }
+        <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
 
         <button type="submit" class="btn btn-primary w-100">
             Sign Up

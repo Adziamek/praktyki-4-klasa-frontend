@@ -1,7 +1,9 @@
-import { AuthService } from '../../auth/auth-service';
+import { AuthService } from '../../service/auth-service/auth-service';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ProductService } from '../../products/product.service';
 import { Product } from '../../products/product';
+import { LocationsService } from '../../service/location-service/locations-service';
+import { Location } from '../../service/location-service/location';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,11 +13,14 @@ import { Product } from '../../products/product';
 export class Dashboard {
   private authService = inject(AuthService);
   private productService = inject(ProductService);
+  private locationsService = inject(LocationsService);
   private changeDetector = inject(ChangeDetectorRef);
 
   username: string | null = null;
   products: Product[] = [];
   errorMessage: string | null = null;
+  productsCount = 0;
+  locationsCount = 0;
 
   constructor() {
     this.username = this.authService.getUsername();
@@ -23,11 +28,23 @@ export class Dashboard {
     this.productService.getProducts().subscribe({
       next: products => {
         this.products = products;
+        this.productsCount = products.length;
         this.changeDetector.detectChanges();
       },
       error: error => {
         this.errorMessage = 'Nie udało się pobrać listy produktów.';
+        console.error('Error:', error);
         this.changeDetector.detectChanges();
+      },
+    });
+
+    this.locationsService.getAllLocations().subscribe({
+      next: locations => {
+        this.locationsCount = locations.length;
+        this.changeDetector.detectChanges();
+      },
+      error: error => {
+        console.error('Error:', error);
       }
     });
   }
