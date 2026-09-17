@@ -15,21 +15,19 @@ export class Dashboard {
 
   username: string | null = null;
   products: Product[] = [];
+  errorMessage: string | null = null;
 
   constructor() {
     this.username = this.authService.getUsername();
 
     this.productService.getProducts().subscribe({
       next: products => {
-        console.log('API ZWRÓCIŁO:', products);
-        console.log('ILE:', products.length);
-
         this.products = products;
-
         this.changeDetector.detectChanges();
       },
       error: error => {
-        console.error('BŁĄD:', error);
+        this.errorMessage = 'Nie udało się pobrać listy produktów.';
+        this.changeDetector.detectChanges();
       }
     });
   }
