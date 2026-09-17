@@ -16,3 +16,21 @@
     height: 40px;
     border-radius: 0 8px 8px 0;
 }
+
+.modal-overlay {
+    position: fixed;
+    display: flex;
+    inset: 0;
+    z-index: 2;
+
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+}
+
+.modal-window {
+    width: 500px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}

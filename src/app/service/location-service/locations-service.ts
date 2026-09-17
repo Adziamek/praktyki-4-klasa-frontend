@@ -34,6 +34,21 @@ export class LocationsService {
         })
     }
 
+    editLocation(
+        id: number,
+        code: string,
+        warehouseCode: string,
+        name: string,
+        isActive: boolean
+    ) {
+        return this.http.put(`${this.api}/${id}`, {
+            code,
+            warehouseCode,
+            name,
+            isActive
+        })
+    }
+
     deleteLocation(id: number) {
         return this.http.delete(`${this.api}/${id}`);
     }

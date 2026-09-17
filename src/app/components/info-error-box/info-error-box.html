@@ -1,0 +1,5 @@
+@if (infoMessage()) {
+    <p class="alert alert-info" style="width: auto; height: auto;">{{ infoMessage() }}</p>
+} @else if (errorMessage()) {
+    <p class="alert alert-danger" style="width: auto; height: auto;">{{ errorMessage() }}</p>
+}

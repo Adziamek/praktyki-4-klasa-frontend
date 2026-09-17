@@ -3,9 +3,11 @@ import { LocationsService  } from '../../service/location-service/locations-serv
 import { Location } from '../../service/location-service/location';
 import { FormsModule } from '@angular/forms';
 import { InputString } from '../../components/input-string/input-string';
+import { SubmitButton } from '../../components/submit-button/submit-button';
+import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 
 @Component({
-  imports: [FormsModule, InputString],
+  imports: [FormsModule, InputString, SubmitButton, InfoErrorBox],
   selector: 'app-locations',
   styleUrl: './locations.css',
   templateUrl: './locations.html',
@@ -13,14 +15,25 @@ import { InputString } from '../../components/input-string/input-string';
 export class Locations {
     private locationService = inject(LocationsService);
     private changeDetector = inject(ChangeDetectorRef);
-    isOpen = signal(false);
+    isSideOpen = signal(false);
+    isEditOpen = signal(false);
+    isDeleteOpen = signal(false);
 
     locations: Location[] = [];
 
-    code = '';
-    warehouseCode = '';
-    name = '';
-    isActive = false;
+    id = -1;
+
+    // For adding
+    addCode = '';
+    addWarehouseCode = '';
+    addName = '';
+    addIsActive = false;
+
+    // For editing
+    editCode = '';
+    editWarehouseCode = '';
+    editName = '';
+    editIsActive = false;
 
     infoMessage = signal('');
     errorMessage = signal('');
@@ -32,10 +45,63 @@ export class Locations {
         this.showLocations();
     }
 
+    openCloseSide() {
+        this.isSideOpen.update(value => !value);
+
+        if (!this.isSideOpen())
+            this.clearMessages();
+    }
+
+    openEdit(id: number) {
+        let location = this.locations.find(x => x.id === id);
+
+        if (location == null)
+            return;
+
+        this.id = id;
+        this.editCode = location.code;
+        this.editWarehouseCode = location.warehouseCode;
+        this.editName = location.name;
+        this.editIsActive = location.isActive;
+
+        this.clearMessages();
+
+        if (this.isSideOpen())
+            this.openCloseSide();
+
+        this.isEditOpen.set(true);
+    }
+
+    closeEdit() {
+        this.isEditOpen.set(false);
+        this.clearMessages();
+    }
+
+    openDelete(id: number) {
+        this.clearMessages();
+
+        this.id = id;
+        this.isDeleteOpen.set(true);
+
+        this.closeEdit();
+    }
+
+    closeDelete() {
+        this.id = -1;
+        this.isDeleteOpen.set(false);
+    }
+
+    clearMessages() {
+        this.infoMessage = signal('');
+        this.errorMessage = signal('');
+        this.codeError = signal('');
+        this.warehouseCodeError = signal('');
+        this.nameError = signal('');
+     }
+
     showLocations() {
         this.locationService.getAllLocations().subscribe({
             next: locations => {
-                console.log(locations);
                 this.locations = locations;
                 this.changeDetector.detectChanges();
             },
@@ -46,17 +112,13 @@ export class Locations {
     }
     
     addLocation() {
-        this.errorMessage.set('');
-        this.infoMessage.set('');
-        this.codeError.set('');
-        this.warehouseCodeError.set('');
-        this.nameError.set('');
+        this.clearMessages();
 
         this.locationService.addLocation(
-            this.code,
-            this.warehouseCode,
-            this.name,
-            this.isActive
+            this.addCode,
+            this.addWarehouseCode,
+            this.addName,
+            this.addIsActive
         ).subscribe({
             next: () => {
                 this.infoMessage.set("Location added.");
@@ -73,7 +135,49 @@ export class Locations {
                     return;
                 }
 
-                this.errorMessage.set(error.error?.detail ?? 'Signup failed. Please try again.');
+                this.errorMessage.set(error.error?.detail ?? 'Adding failed. Please try again.');
+            }
+        })
+    }
+
+    editLocation() {
+        this.clearMessages();
+
+        this.locationService.editLocation(
+            this.id,
+            this.editCode,
+            this.editWarehouseCode,
+            this.editName,
+            this.editIsActive
+        ).subscribe({
+            next: () => {
+                this.infoMessage.set("Location changed.");
+                this.showLocations();
+            },
+            error: (error) => {
+                if (error.status === 400 && error.error?.errors) {
+                    const errors = error.error.errors;
+
+                    this.codeError.set(errors.Code?.[0] ?? '');
+                    this.warehouseCodeError.set(errors.WarehouseCode?.[0] ?? '');
+                    this.nameError.set(errors.Name?.[0] ?? '');
+
+                    return;
+                }
+
+                this.errorMessage.set(error.error?.detail ?? 'Editing failed. Please try again.');
+            }
+        })
+    }
+
+    deleteLocation() {
+        this.locationService.deleteLocation(this.id).subscribe({
+            next: () => {
+                this.infoMessage.set("Location deleted.");
+                this.showLocations();
+            },
+            error: (error) => {
+                this.errorMessage.set(error.error?.detail ?? 'Deleting failed. Please try again.');
             }
         })
     }

@@ -1,10 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../service/auth-service/auth-service';
+import { InputString } from '../../components/input-string/input-string';
+import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 
 @Component({
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, InputString, InfoErrorBox],
   selector: 'app-signup',
   styleUrl: './signup.css',
   templateUrl: './signup.html',

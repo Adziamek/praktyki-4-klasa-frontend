@@ -1,12 +1,12 @@
 <!-- -------- Form -------- -->
 <div
     class="location-panel position-fixed top-0 start-0 h-100 bg-white shadow"
-    [class.open]="isOpen()">
+    [class.open]="isSideOpen()">
 
     <button
         class="toggle-button btn btn-primary position-absolute top-50"
-        (click)="isOpen.update(value => !value)">
-        {{ isOpen() ? '<' : '>' }}
+        (click)="openCloseSide()">
+        {{ isSideOpen() ? '<' : '>' }}
     </button>
 
     <div class="p-4">
@@ -19,7 +19,7 @@
                 name="code"
                 placeholder="L-XXX"
                 [error]="codeError()"
-                [(ngModel)]="code"
+                [(ngModel)]="addCode"
             />
 
             <app-input-string 
@@ -28,7 +28,7 @@
                 name="warehouseCode"
                 placeholder="WH-XX"
                 [error]="warehouseCodeError()"
-                [(ngModel)]="warehouseCode"
+                [(ngModel)]="addWarehouseCode"
             />
 
             <app-input-string 
@@ -36,31 +36,116 @@
                 id="name"
                 name="name"
                 [error]="nameError()"
-                [(ngModel)]="name"
+                [(ngModel)]="addName"
             />
 
             <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="isActive">
+                <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="addIsActive">
                 <label class="form-check-label" for="isActive">Is active</label>
             </div>
 
-            <!-- TODO: Make Component Later -->
-            <button type="submit" class="btn btn-primary w-100 mb-3">
-                Add
-            </button>
+            <app-submit-button buttonText="Add" />
 
-            @if (infoMessage()) {
-                <p class="alert alert-info" style="width: auto; height: auto;">{{ infoMessage() }}</p>
-            } @else if (errorMessage()) {
-                <p class="alert alert-danger" style="width: auto; height: auto;">{{ errorMessage() }}</p>
-            }
+            <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
         </form>
     </div>
 
 </div>
 
-<!-- -------- Table -------- -->
+<!-- -------- Edit -------- -->
+@if (isEditOpen()) {
+    <div class="modal-overlay">
 
+        <div
+            class="modal-window bg-white rounded shadow"
+            (click)="$event.stopPropagation()">
+
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                <h5 class="mb-0">Edit Location</h5>
+                <button
+                        class="btn btn-secondary"
+                        (click)="closeEdit()">
+                        Close
+                    </button>
+            </div>
+
+            <div class="p-3 border-top">
+                <form (ngSubmit)="editLocation()">
+                    <app-input-string 
+                        label="Code"
+                        id="code"
+                        name="code"
+                        placeholder="L-XXX"
+                        [error]="codeError()"
+                        [(ngModel)]="editCode"
+                    />
+
+                    <app-input-string 
+                        label="Warehouse Code"
+                        id="warehouseCode"
+                        name="warehouseCode"
+                        placeholder="WH-XX"
+                        [error]="warehouseCodeError()"
+                        [(ngModel)]="editWarehouseCode"
+                    />
+
+                    <app-input-string 
+                        label="Name"
+                        id="name"
+                        name="name"
+                        [error]="nameError()"
+                        [(ngModel)]="editName"
+                    />
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="editIsActive">
+                        <label class="form-check-label" for="isActive">Is active</label>
+                    </div>
+
+                    <app-submit-button buttonText="Edit" />
+
+                    <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<!-- -------- Delete -------- -->
+@if (isDeleteOpen()) {
+    <div class="modal-overlay">
+
+        <div
+            class="modal-window bg-white rounded shadow"
+            (click)="$event.stopPropagation()">
+
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                <h5 class="mb-0">Delete Location</h5>
+                <button
+                        class="btn btn-secondary"
+                        (click)="closeDelete()">
+                        Close
+                    </button>
+            </div>
+
+            <div class="p-3 border-top text-center">
+                @if (!infoMessage() && !errorMessage()) {
+                    <p>Are you sure?</p>
+
+                    <button class="btn btn-danger" (click)="deleteLocation();">Delete</button>
+                } @else {
+                    <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
+                }
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<!-- -------- Table -------- -->
 <div class="mx-auto" style="width: 90%;">
     <p>Liczba lokalizacji: {{ locations.length }}</p>
 
@@ -72,6 +157,8 @@
                 <th scope="col">Warehouse Code</th>
                 <th scope="col">Name</th>
                 <th scope="col">Active</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -82,6 +169,8 @@
                     <td>{{ location.warehouseCode }}</td>
                     <td>{{ location.name }}</td>
                     <td>{{ location.isActive ? '✓' : '✗' }}</td>
+                    <td><button class="btn btn-secondary" (click)="openEdit(location.id);">✎</button></td>
+                    <td><button class="btn btn-danger" (click)="openDelete(location.id);">🗑︎</button></td>
                 </tr>
             }
         </tbody>
