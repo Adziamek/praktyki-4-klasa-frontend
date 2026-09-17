@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ProductService } from '../../product.service';
+import { ProductService } from '../../../service/products-service/product.service';
 
 @Component({
   imports: [FormsModule],
