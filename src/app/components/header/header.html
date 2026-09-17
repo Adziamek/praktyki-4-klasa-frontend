@@ -1,16 +1,18 @@
 <header class="d-flex position-fixed flex-wrap justify-content-center py-3 mb-4 px-5 border-bottom bg-white z-1 w-100">
-    <a href="/dashboard" class="d-flex align-items-center mb-3 mx-5 mb-md-0 me-md-auto text-dark text-decoration-none">
+    <a class="d-flex align-items-center mb-3 mx-5 mb-md-0 me-md-auto text-dark text-decoration-none" routerLink="/dashboard">
         <span class="fs-4">WMS</span>
     </a>
 
     <ul class="nav nav-pills">
-        @if (logedIn | async) {
-            <li class="nav-item"><a href="/dashboard" class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
-            <li class="nav-item"><a href="/locations" class="nav-link" routerLink="/locations" routerLinkActive="active">Locations</a></li>
-            <li class="nav-item"><a href="/settings" class="nav-link" routerLink="/settings" routerLinkActive="active">Settings</a></li>
-        } @else {
-            <li class="nav-item"><a href="/settings" class="nav-link" routerLink="/settings">Log Out</a></li>
-        }
+        <app-nav-element navText="Dashboard" routerLink="/dashboard" />
+
+        <app-nav-element navText="Locations" routerLink="/locations" [condition]="isAdministrator() || isWarehouseman()" />
+        
+        <app-nav-element navText="Settings" routerLink="/settings" />
+        
+        <li class="nav-item">
+            <button class="nav-link btn btn-link" type="button" (click)="logout()">Log Out</button>
+        </li>
     </ul>
 </header>
 

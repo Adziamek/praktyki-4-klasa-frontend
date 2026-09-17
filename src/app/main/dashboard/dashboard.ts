@@ -1,9 +1,7 @@
 import { AuthService } from '../../service/auth-service/auth-service';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ProductService } from '../../products/product.service';
-import { Product } from '../../products/product';
 import { LocationsService } from '../../service/location-service/locations-service';
-import { Location } from '../../service/location-service/location';
 
 @Component({
   selector: 'app-dashboard',
