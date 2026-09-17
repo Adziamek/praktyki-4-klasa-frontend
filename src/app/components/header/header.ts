@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../service/auth-service/auth-service';
-import { filter } from 'rxjs';
+import { NavElement } from '../nav-element/nav-element';
+import { Roles } from '../../environments/role/roles';
 
 @Component({
-  imports: [RouterLink, RouterLinkActive, AsyncPipe],
+  imports: [RouterLink, NavElement],
   selector: 'app-header',
   styleUrl: './header.css',
   templateUrl: './header.html',
@@ -13,6 +13,22 @@ import { filter } from 'rxjs';
 export class Header {
   private authService = inject(AuthService);
   private router = inject(Router);
-  
-  logedIn = this.authService.isLoggedIn();
+  role: string | null = null;
+
+  isUser() {
+      return this.authService.isUser();
+  }
+
+  isWarehouseman() {
+      return this.authService.isWarehouseman();
+  }
+
+  isAdministrator() {
+      return this.authService.isAdministrator();
+  }
+
+  logout() {
+    this.authService.removeToken();
+    this.router.navigate(['/login']);
+  }
 }

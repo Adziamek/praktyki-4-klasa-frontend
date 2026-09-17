@@ -89,6 +89,7 @@ export class Locations {
     closeDelete() {
         this.id = -1;
         this.isDeleteOpen.set(false);
+        this.clearMessages();
     }
 
     clearMessages() {

@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment/environment';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { Roles } from '../../environments/role/roles';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
     private api = `${environment.apiUsers}`;
-    
+    private role = signal<string | null>(null);
+
     constructor(private http: HttpClient) { }
 
     login(username: string, password: string) {
@@ -39,21 +41,36 @@ export class AuthService {
         localStorage.removeItem('token');
     }
 
-    isLoggedIn(): Observable<boolean> {
+    getUserRole(): Observable<string | null> {
         const token = this.getToken();
 
         if (!token) {
             console.log('No token found');
-            return of(false);
+            return of(null);
         }
 
-        return this.http.get(`${this.api}/me`).pipe(
-            map(() => true),
+        return this.http.get<{ role: string }>(`${this.api}/me`).pipe(
+            map(user => {
+                this.role.set(user.role);
+                return user.role;
+            }),
             catchError(() => {
                 this.removeToken();
-                return of(false);
+                return of(null);
             })
-        )
+        );
+    }
+
+    isUser(): boolean {
+        return this.role() === Roles.User;
+    }
+
+    isWarehouseman(): boolean {
+        return this.role() === Roles.Warehouseman;
+    }
+
+    isAdministrator(): boolean {
+        return this.role() === Roles.Administrator;
     }
 
     getUsername(): string | null {

@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './auth/auth.guard';
+import { Roles } from './environments/role/roles';
 import { Login } from './auth/login/login';
 import { Signup } from './auth/signup/signup';
-import { authGuard } from './auth/auth.guard';
-
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { Dashboard } from './main/dashboard/dashboard';
 import { Locations } from './main/locations/locations';
 import { Settings } from './main/settings/settings';
+import { Create } from './products/forms/create/create';
 
 export const routes: Routes = [
     {
@@ -34,12 +35,23 @@ export const routes: Routes = [
             {
                 path: 'locations',
                 component: Locations,
-                canActivate: [authGuard]
+                canActivate: [authGuard],
+                data: {
+                    roles: [
+                        Roles.Administrator,
+                        Roles.Warehouseman
+                    ]
+                }
             },
             {
                 path: 'settings',
                 component: Settings,
                 canActivate: [authGuard]
+            },
+            {
+              path: 'create',
+              component: Create,
+              canActivate: [authGuard]
             }
         ]
     }

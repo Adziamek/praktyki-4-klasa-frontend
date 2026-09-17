@@ -1,0 +1,97 @@
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <form
+    class="w-100"
+    style="max-width: 400px;"
+    (ngSubmit)="create()"
+  >
+
+    <h2 class="text-center mb-4">Add Product</h2>
+
+    <div class="mb-3">
+      <label for="name" class="form-label">
+        Name
+      </label>
+
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        [(ngModel)]="name"
+        name="name"
+        required
+      >
+
+      @if (nameError()) {
+        <div class="text-danger">
+          {{ nameError() }}
+        </div>
+      }
+    </div>
+
+
+    <div class="mb-3">
+      <label for="ean" class="form-label">
+        EAN
+      </label>
+
+      <input
+        type="text"
+        class="form-control"
+        id="ean"
+        [(ngModel)]="ean"
+        name="ean"
+        required
+      >
+
+      @if (eanError()) {
+        <div class="text-danger">
+          {{ eanError() }}
+        </div>
+      }
+    </div>
+
+
+    <div class="mb-3">
+      <label for="categoryId" class="form-label">
+        Category ID
+      </label>
+
+      <input
+        type="number"
+        class="form-control"
+        id="categoryId"
+        [(ngModel)]="categoryId"
+        name="categoryId"
+        required
+      >
+
+      @if (categoryIdError()) {
+        <div class="text-danger">
+          {{ categoryIdError() }}
+        </div>
+      }
+    </div>
+
+
+    @if (errorMessage()) {
+      <div class="alert alert-danger text-center">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (infoMessage()) {
+      <div class="alert alert-info text-center">
+        {{ infoMessage() }}
+      </div>
+    }
+
+
+    <button
+      type="submit"
+      class="btn btn-primary w-100"
+    >
+      Add Product
+    </button>
+
+  </form>
+</div>
