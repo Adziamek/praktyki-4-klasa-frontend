@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { InputString } from '../../components/input-string/input-string';
 import { SubmitButton } from '../../components/submit-button/submit-button';
 import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
+import { Warehouse } from '../../service/warehouse-service/warehouse';
+import { WarehouseService } from '../../service/warehouse-service/warehouse-service';
 
 @Component({
   imports: [FormsModule, InputString, SubmitButton, InfoErrorBox],
@@ -15,17 +17,20 @@ import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 export class Locations {
     private locationService = inject(LocationsService);
     private changeDetector = inject(ChangeDetectorRef);
+    private warehouseService = inject(WarehouseService);
+
     isSideOpen = signal(false);
     isEditOpen = signal(false);
     isDeleteOpen = signal(false);
 
     locations: Location[] = [];
+    warehouses: Warehouse[] = [];
 
     id = -1;
 
     // For adding
     addCode = '';
-    addWarehouseCode = '';
+    addWarehouseCode: string | null = null;
     addName = '';
     addIsActive = false;
 
@@ -43,6 +48,15 @@ export class Locations {
 
     constructor() {
         this.showLocations();
+        
+        this.warehouseService.getAllWarehouses().subscribe({
+            next: warehouses => {
+                this.warehouses = warehouses;
+            },
+            error: error => {
+                console.error('Error:', error);
+            }
+        });
     }
 
     openCloseSide() {
@@ -93,11 +107,11 @@ export class Locations {
     }
 
     clearMessages() {
-        this.infoMessage = signal('');
-        this.errorMessage = signal('');
-        this.codeError = signal('');
-        this.warehouseCodeError = signal('');
-        this.nameError = signal('');
+        this.infoMessage.set('');
+        this.errorMessage.set('');
+        this.codeError.set('');
+        this.warehouseCodeError.set('');
+        this.nameError.set('');
      }
 
     showLocations() {
