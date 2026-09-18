@@ -22,14 +22,25 @@
                 [(ngModel)]="addCode"
             />
 
-            <app-input-string 
-                label="Warehouse Code"
-                id="warehouseCode"
-                name="warehouseCode"
-                placeholder="WH-XX"
-                [error]="warehouseCodeError()"
-                [(ngModel)]="addWarehouseCode"
-            />
+            <div class="mb-3">
+                <label for="choose-warehouse-code">Warehouse Code</label>
+                <select
+                    id="choose-warehouse-code"
+                    class="form-select"
+                    name="warehouseCode"
+                    [(ngModel)]="addWarehouseCode">
+
+                    @for (warehouse of warehouses; track warehouse.id) {
+                        <option [value]="warehouse.code">{{ warehouse.code }}</option>
+                    }
+                </select>
+
+                @if (warehouseCodeError()) {
+                    <div class="text-danger">
+                        {{ warehouseCodeError() }}
+                    </div>
+                }
+            </div>
 
             <app-input-string 
                 label="Name"

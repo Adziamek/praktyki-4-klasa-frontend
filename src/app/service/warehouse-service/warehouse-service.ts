@@ -2,54 +2,54 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Location } from './location';
+import { Warehouse } from './warehouse';
 
 @Injectable({
     providedIn: 'root'
 })
-export class LocationsService {
-    private api = `${environment.apiLocations}`;
-
+export class WarehouseService {
+    private api = `${environment.apiWarehouses}`;
+    
     constructor(private http: HttpClient) { }
 
-    getAllLocations(): Observable<Location[]> {
-        return this.http.get<Location[]>(`${this.api}`);
+    getAllWarehouses(): Observable<Warehouse[]> {
+        return this.http.get<Warehouse[]>(`${this.api}`);
     }
 
-    getLocationById(id: number): Observable<Location> {
-        return this.http.get<Location>(`${this.api}/${id}`);
+    getWarehouseById(id: number): Observable<Warehouse> {
+        return this.http.get<Warehouse>(`${this.api}/${id}`);
     }
 
-    addLocation(
+    addWarehouse(
         code: string,
-        warehouseCode: string | null,
         name: string,
+        description: string,
         isActive: boolean
     ) {
         return this.http.post(`${this.api}`, {
             code,
-            warehouseCode,
             name,
+            description,
             isActive
         })
     }
 
-    editLocation(
+    editWarehouse(
         id: number,
         code: string,
-        warehouseCode: string,
         name: string,
+        description: string,
         isActive: boolean
     ) {
         return this.http.put(`${this.api}/${id}`, {
             code,
-            warehouseCode,
             name,
+            description,
             isActive
         })
     }
 
-    deleteLocation(id: number) {
+    deleteWarehouse(id: number) {
         return this.http.delete(`${this.api}/${id}`);
     }
 }
