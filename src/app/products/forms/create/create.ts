@@ -1,10 +1,12 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../service/products-service/product.service';
+import { InputString } from '../../../components/input-string/input-string';
+import { InfoErrorBox } from '../../../components/info-error-box/info-error-box';
+import { SubmitButton } from '../../../components/submit-button/submit-button';
 
 @Component({
-  imports: [FormsModule],
+  imports: [FormsModule, InputString, InputString, InfoErrorBox, SubmitButton],
   selector: 'app-create',
   styleUrl: './create.css',
   templateUrl: './create.html',
@@ -12,13 +14,15 @@ import { ProductService } from '../../../service/products-service/product.servic
 export class Create {
   name = '';
   ean = '';
-  categoryId = '';
+  categoryId: number = 0;
+  brandId: number = 0;
 
   infoMessage = signal('');
   errorMessage = signal('');
   nameError = signal('');
   eanError = signal('');
   categoryIdError = signal('');
+  brandIdError = signal('');
 
   constructor(private productService: ProductService) {}
 
@@ -28,23 +32,13 @@ export class Create {
     this.nameError.set('');
     this.eanError.set('');
     this.categoryIdError.set('');
-
-    if (!this.name || !this.ean || !this.categoryId) {
-      this.errorMessage.set('Name, EAN, and CategoryID are required.');
-      return;
-    }
-
-    const categoryId = Number(this.categoryId);
-
-    if (!Number.isInteger(categoryId) || categoryId <= 0) {
-      this.categoryIdError.set('Category ID must be a positive integer.');
-      return;
-    }
+    this.brandIdError.set('');
 
     this.productService.createProduct(
       this.name,
       this.ean,
-      categoryId
+      this.categoryId,
+      this.brandId
     ).subscribe({
       next: (product) => {
         this.errorMessage.set('');
@@ -58,6 +52,7 @@ export class Create {
           this.nameError.set(errors.Name?.[0] ?? '');
           this.eanError.set(errors.Ean?.[0] ?? '');
           this.categoryIdError.set(errors.CategoryId?.[0] ?? '');
+          this.brandIdError.set(errors.BrandId?.[0] ?? '');
 
           return;
         }

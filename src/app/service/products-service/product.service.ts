@@ -14,11 +14,23 @@ export class ProductService {
   getProducts() {
     return this.http.get<Product[]>(this.apiUrl);
   }
-  createProduct(name: string, ean: string, categoryId: number) {
+  
+  createProduct(name: string, ean: string, categoryIdToCheck: number, brandIdToCheck: number) {
+    const categoryId =
+      categoryIdToCheck === null || categoryIdToCheck === undefined
+        ? null
+        : Number(categoryIdToCheck);
+
+    const brandId =
+      brandIdToCheck === null || brandIdToCheck === undefined
+        ? null
+        : Number(brandIdToCheck);
+
     return this.http.post<Product>(`${environment.apiProducts}/add`, {
       name,
       ean,
-      categoryId
+      categoryId,
+      brandId
     });
   }
 }

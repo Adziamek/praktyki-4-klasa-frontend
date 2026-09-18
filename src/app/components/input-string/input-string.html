@@ -9,7 +9,7 @@
         [placeholder]="placeholder()"
         [value]="value()"
         (input)="valueChange.emit($any($event.target).value)"
-        required
+        [required]="required()"
     >
 
     @if (error()) {
