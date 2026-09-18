@@ -7,6 +7,7 @@
             label="Username"
             id="username"
             name="username"
+            [required]="true"
             [error]="usernameError()"
             [(ngModel)]="username"
         />
@@ -16,6 +17,7 @@
             id="password"
             name="password"
             type="password"
+            [required]="true"
             [error]="passwordError()"
             [(ngModel)]="password"
         />
@@ -25,6 +27,7 @@
             id="email"
             name="email"
             type="email"
+            [required]="true"
             [error]="emailError()"
             [(ngModel)]="email"
         />

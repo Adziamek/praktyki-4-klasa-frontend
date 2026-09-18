@@ -13,6 +13,7 @@ export class InputString  {
   placeholder = input<string>('');
   value = input<string>('');
   error = input<string | null>(null);
+  required = input<boolean>(false);
 
   valueChange = output<string>();
 }
