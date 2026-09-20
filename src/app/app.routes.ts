@@ -9,11 +9,12 @@ import { Locations } from './main/locations/locations';
 import { Settings } from './main/settings/settings';
 import { Create } from './products/forms/create/create';
 
+import { LandingPage } from './main/landing/landing';
+
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
+        component: LandingPage,
     },
     {
         path: 'login',

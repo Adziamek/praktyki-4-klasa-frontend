@@ -1,6 +1,6 @@
-<header class="d-flex position-fixed flex-wrap justify-content-center py-3 mb-4 px-5 border-bottom bg-white z-1 w-100">
-    <a class="d-flex align-items-center mb-3 mx-5 mb-md-0 me-md-auto text-dark text-decoration-none" routerLink="/dashboard">
-        <span class="fs-4">WMS</span>
+<header class="d-flex position-fixed flex-wrap justify-content-center py-3 mb-4 px-5 z-1 w-100">
+    <a class="d-flex align-items-center mb-3 mx-5 mb-md-0 me-md-auto text-decoration-none" routerLink="/dashboard">
+        <span class="fs-4 brand">WMS</span>
     </a>
 
     <ul class="nav nav-pills">
@@ -13,7 +13,7 @@
         <app-nav-element navText="Settings" routerLink="/settings" />
 
         <li class="nav-item">
-            <button class="nav-link btn btn-link" type="button" (click)="logout()">Log Out</button>
+            <button class="nav-link btn btn-link logout-button" type="button" (click)="logout()">Log Out</button>
         </li>
     </ul>
 </header>
