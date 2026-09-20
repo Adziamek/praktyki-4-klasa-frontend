@@ -1,7 +1,7 @@
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <form class="w-100" style="max-width: 400px;" (ngSubmit)="signup()">
+<div class="auth-shell">
+    <form class="auth-form" (ngSubmit)="signup()">
 
-        <h2 class="text-center mb-4">Sign Up</h2>
+        <h2 class="text-center mb-4">Create account</h2>
 
         <app-input-string 
             label="Username"
@@ -32,8 +32,8 @@
             [(ngModel)]="email"
         />
 
-        <div class="mb-3">
-            <p class="text-center"><a routerLink="/login">Log In</a></p>
+        <div class="mb-3 auth-link-row">
+            <p class="text-center mb-0"><a routerLink="/login">Already have an account?</a></p>
         </div>
 
         <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />

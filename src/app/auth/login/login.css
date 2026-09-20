@@ -1,0 +1,46 @@
+:host {
+  display: flex;
+  min-height: calc(100vh - 90px);
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-shell {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.auth-form {
+  width: min(100%, 420px);
+  padding: 2.1rem 1.6rem;
+  border: 1px solid var(--border-accent);
+  border-radius: 1rem;
+  background: var(--surface);
+  box-shadow: 0 14px 28px rgba(162, 88, 220, 0.06);
+}
+
+.auth-form h2 {
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--text);
+}
+
+.auth-link-row {
+  margin-top: 0.75rem;
+}
+
+.auth-link-row a {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.auth-link-row a:hover {
+  color: var(--accent);
+}
+
+.auth-form .btn {
+  margin-top: 0.4rem;
+}
