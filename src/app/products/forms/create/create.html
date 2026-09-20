@@ -8,42 +8,47 @@
     <h2 class="text-center mb-4">Add Product</h2>
 
     <app-input-string
-        label="Name" 
+        label="Name"
         id="name"
         name="name"
         [required]="true"
         [error]="nameError()"
-        [(ngModel)]="name" 
+        [(ngModel)]="name"
       />
 
     <app-input-string
-      label="EAN" 
+      label="EAN"
       id="ean"
       name="ean"
       [required]="true"
       [error]="eanError()"
-      [(ngModel)]="ean" 
+      [(ngModel)]="ean"
     />
 
-    <app-input-string
-      type="number"
-      label="Category ID" 
+    <app-input-select
+      label="Category"
       id="categoryId"
       name="categoryId"
-      [required]="true"
+      placeholder="Select Category"
+      [options]="categories"
+      [value]="categoryId"
+      (valueChange)="categoryId = $event"
       [error]="categoryIdError()"
-      [(ngModel)]="categoryId" 
+      [required]="true"
     />
 
-    <app-input-string
-      type="number"
-      label="Brand ID" 
+    <app-input-select
+      label="Brand"
       id="brandId"
       name="brandId"
-      [required]="true"
+      placeholder="Select Brand"
+      [options]="brands"
+      [value]="brandId"
+      (valueChange)="brandId = $event"
       [error]="brandIdError()"
-      [(ngModel)]="brandId" 
+      [required]="true"
     />
+
 
     <app-submit-button buttonText="Add Product" />
 

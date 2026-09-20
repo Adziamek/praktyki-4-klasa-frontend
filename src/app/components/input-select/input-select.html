@@ -1,0 +1,30 @@
+<div class="mb-3">
+  <label [for]="id()" class="form-label">
+    {{ label() }}
+  </label>
+
+  <select
+    class="form-select"
+    [id]="id()"
+    [name]="name()"
+    [value]="value()"
+    (change)="onChange($event)"
+    [required]="required()">
+
+    <option value="0" disabled>
+      {{ placeholder() }}
+    </option>
+
+    @for (option of options(); track option.id) {
+      <option [value]="option.id">
+        {{ option.name }}
+      </option>
+    }
+  </select>
+
+  @if (error()) {
+    <div class="text-danger">
+      {{ error() }}
+    </div>
+  }
+</div>

@@ -13,7 +13,7 @@
         <h5 class="mb-3">Add Location</h5>
 
         <form (ngSubmit)="addLocation()">
-            <app-input-string 
+            <app-input-string
                 label="Code"
                 id="code"
                 name="code"
@@ -22,27 +22,21 @@
                 [(ngModel)]="addCode"
             />
 
-            <div class="mb-3">
-                <label for="choose-warehouse-code">Warehouse Code</label>
-                <select
-                    id="choose-warehouse-code"
-                    class="form-select"
-                    name="warehouseCode"
-                    [(ngModel)]="addWarehouseCode">
+          <app-input-select
+            label="Warehouse"
+            id="choose-warehouse-code"
+            name="warehouseCode"
+            placeholder="Choose warehouse"
+            [options]="warehouses"
+            valueKey="code"
+            labelKey="code"
+            [value]="addWarehouseCode ?? ''"
+            (valueChange)="addWarehouseCode = $event.toString()"
+            [error]="warehouseCodeError()"
+            [required]="true"
+          />
 
-                    @for (warehouse of warehouses; track warehouse.id) {
-                        <option [value]="warehouse.code">{{ warehouse.code }}</option>
-                    }
-                </select>
-
-                @if (warehouseCodeError()) {
-                    <div class="text-danger">
-                        {{ warehouseCodeError() }}
-                    </div>
-                }
-            </div>
-
-            <app-input-string 
+            <app-input-string
                 label="Name"
                 id="name"
                 name="name"
@@ -82,7 +76,7 @@
 
             <div class="p-3 border-top">
                 <form (ngSubmit)="editLocation()">
-                    <app-input-string 
+                    <app-input-string
                         label="Code"
                         id="code"
                         name="code"
@@ -91,7 +85,7 @@
                         [(ngModel)]="editCode"
                     />
 
-                    <app-input-string 
+                    <app-input-string
                         label="Warehouse Code"
                         id="warehouseCode"
                         name="warehouseCode"
@@ -100,7 +94,7 @@
                         [(ngModel)]="editWarehouseCode"
                     />
 
-                    <app-input-string 
+                    <app-input-string
                         label="Name"
                         id="name"
                         name="name"
