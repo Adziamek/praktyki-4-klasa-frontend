@@ -3,13 +3,14 @@ import { LocationsService  } from '../../service/location-service/locations-serv
 import { Location } from '../../service/location-service/location';
 import { FormsModule } from '@angular/forms';
 import { InputString } from '../../components/input-string/input-string';
+import { InputSelect} from '../../components/input-select/input-select';
 import { SubmitButton } from '../../components/submit-button/submit-button';
 import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 import { Warehouse } from '../../service/warehouse-service/warehouse';
 import { WarehouseService } from '../../service/warehouse-service/warehouse-service';
 
 @Component({
-  imports: [FormsModule, InputString, SubmitButton, InfoErrorBox],
+  imports: [FormsModule, InputString,InputSelect, SubmitButton, InfoErrorBox],
   selector: 'app-locations',
   styleUrl: './locations.css',
   templateUrl: './locations.html',
@@ -48,7 +49,7 @@ export class Locations {
 
     constructor() {
         this.showLocations();
-        
+
         this.warehouseService.getAllWarehouses().subscribe({
             next: warehouses => {
                 this.warehouses = warehouses;
@@ -125,7 +126,7 @@ export class Locations {
             }
         });
     }
-    
+
     addLocation() {
         this.clearMessages();
 
