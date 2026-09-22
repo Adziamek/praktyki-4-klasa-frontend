@@ -11,16 +11,20 @@ export class InputSelect {
   name = input.required<string>();
 
   placeholder = input<string>('Wybierz opcję');
-  value = input<number | string>(0);
+
+  value = input<string | number>('');
   options = input.required<any[]>();
+
+  valueKey = input<string>('id');
+  labelKey = input<string>('name');
 
   error = input<string | null>(null);
   required = input<boolean>(false);
 
-  valueChange = output<number>();
+  valueChange = output<string | number>();
 
   onChange(event: Event) {
-    const value = Number((event.target as HTMLSelectElement).value);
+    const value = (event.target as HTMLSelectElement).value;
     this.valueChange.emit(value);
   }
 }

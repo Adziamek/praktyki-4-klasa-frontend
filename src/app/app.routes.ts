@@ -7,7 +7,7 @@ import { MainLayout } from './layouts/main-layout/main-layout';
 import { Dashboard } from './main/dashboard/dashboard';
 import { Locations } from './main/locations/locations';
 import { Settings } from './main/settings/settings';
-import { Create } from './products/forms/create/create';
+import { Create } from './main/products/forms/create/create';
 
 import { LandingPage } from './main/landing/landing';
 
