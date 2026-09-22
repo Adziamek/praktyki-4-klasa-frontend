@@ -26,7 +26,7 @@ export class LocationsService {
       name: string,
       isActive: boolean
     ) {
-      return this.http.post(`${this.api}/add`, {
+      return this.http.post(`${this.api}`, {
         code,
         warehouseCode,
         name,
@@ -41,7 +41,7 @@ export class LocationsService {
       name: string,
       isActive: boolean
     ) {
-      return this.http.put(`${this.api}/update/${id}`, {
+      return this.http.put(`${this.api}/${id}`, {
         code,
         warehouseCode,
         name,
@@ -50,6 +50,6 @@ export class LocationsService {
     }
 
     deleteLocation(id: number) {
-      return this.http.delete(`${this.api}/delete/${id}`);
+      return this.http.delete(`${this.api}/${id}`);
     }
 }

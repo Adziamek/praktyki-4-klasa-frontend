@@ -14,7 +14,7 @@ export class ProductService {
   getProducts() {
     return this.http.get<Product[]>(this.apiUrl);
   }
-  
+
   createProduct(name: string, ean: string, categoryIdToCheck: number, brandIdToCheck: number) {
     const categoryId =
       categoryIdToCheck === null || categoryIdToCheck === undefined
@@ -26,7 +26,7 @@ export class ProductService {
         ? null
         : Number(brandIdToCheck);
 
-    return this.http.post<Product>(`${environment.apiProducts}/add`, {
+    return this.http.post<Product>(`${environment.apiProducts}`, {
       name,
       ean,
       categoryId,
