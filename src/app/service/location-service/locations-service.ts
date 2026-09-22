@@ -21,35 +21,35 @@ export class LocationsService {
     }
 
     addLocation(
-        code: string,
-        warehouseCode: string | null,
-        name: string,
-        isActive: boolean
+      code: string,
+      warehouseCode: string | null,
+      name: string,
+      isActive: boolean
     ) {
-        return this.http.post(`${this.api}`, {
-            code,
-            warehouseCode,
-            name,
-            isActive
-        })
+      return this.http.post(`${this.api}/add`, {
+        code,
+        warehouseCode,
+        name,
+        isActive
+      });
     }
 
     editLocation(
-        id: number,
-        code: string,
-        warehouseCode: string,
-        name: string,
-        isActive: boolean
+      id: number,
+      code: string,
+      warehouseCode: string,
+      name: string,
+      isActive: boolean
     ) {
-        return this.http.put(`${this.api}/${id}`, {
-            code,
-            warehouseCode,
-            name,
-            isActive
-        })
+      return this.http.put(`${this.api}/update/${id}`, {
+        code,
+        warehouseCode,
+        name,
+        isActive
+      });
     }
 
     deleteLocation(id: number) {
-        return this.http.delete(`${this.api}/${id}`);
+      return this.http.delete(`${this.api}/delete/${id}`);
     }
 }

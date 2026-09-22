@@ -1,14 +1,14 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ProductService } from '../../../service/products-service/product.service';
-import { InputString } from '../../../components/input-string/input-string';
-import { InputSelect } from '../../../components/input-select/input-select';
-import { InfoErrorBox } from '../../../components/info-error-box/info-error-box';
-import { SubmitButton } from '../../../components/submit-button/submit-button';
-import { CategoryService } from '../../../service/category-service/category.service';
-import { Category } from '../../../service/category-service/category';
-import { BrandService } from '../../../service/brand-service/brand.service';
-import { Brand } from '../../../service/brand-service/brand';
+import { ProductService } from '../../../../service/products-service/product.service';
+import { InputString } from '../../../../components/input-string/input-string';
+import { InputSelect } from '../../../../components/input-select/input-select';
+import { InfoErrorBox } from '../../../../components/info-error-box/info-error-box';
+import { SubmitButton } from '../../../../components/submit-button/submit-button';
+import { CategoryService } from '../../../../service/category-service/category.service';
+import { Category } from '../../../../service/category-service/category';
+import { BrandService } from '../../../../service/brand-service/brand.service';
+import { Brand } from '../../../../service/brand-service/brand';
 
 @Component({
   imports: [
@@ -22,7 +22,7 @@ import { Brand } from '../../../service/brand-service/brand';
   styleUrl: './create.css',
   templateUrl: './create.html',
 })
-export class Create {
+export class Create implements OnInit {
   name = '';
   ean = '';
   categoryId: number = 0;
@@ -41,9 +41,12 @@ export class Create {
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
-    private brandService: BrandService,) {
-    this.getAllCategories()
-    this.getAllBrands()
+    private brandService: BrandService
+  ) {}
+
+  ngOnInit(): void {
+    this.getAllCategories();
+    this.getAllBrands();
   }
   getAllBrands() {
     this.brandService.getBrands().subscribe({

@@ -32,7 +32,7 @@
       placeholder="Select Category"
       [options]="categories"
       [value]="categoryId"
-      (valueChange)="categoryId = $event"
+      (valueChange)="categoryId = +$event"
       [error]="categoryIdError()"
       [required]="true"
     />
@@ -44,7 +44,7 @@
       placeholder="Select Brand"
       [options]="brands"
       [value]="brandId"
-      (valueChange)="brandId = $event"
+      (valueChange)="brandId = +$event"
       [error]="brandIdError()"
       [required]="true"
     />
