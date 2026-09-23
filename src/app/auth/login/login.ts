@@ -31,7 +31,7 @@ export class Login {
       this.password
     ).subscribe({
       next: (response) => {
-        let token: string = (response as any).token; 
+        let token: string = (response as any).token.result; 
         this.authService.saveToken(token);
 
         this.router.navigate(['/dashboard']);
