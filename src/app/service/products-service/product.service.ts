@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from './product';
 import { environment } from '../../environments/environment/environment';
+import { ProductDto } from './product-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -11,26 +12,42 @@ export class ProductService {
 
   private apiUrl =`${environment.apiProducts}`;
 
+  checkDto(dto: ProductDto) : ProductDto {
+    const checkedCategoryId =
+      dto.categoryId === null || dto.categoryId === undefined
+        ? 0
+        : Number(dto.categoryId);
+
+    const checkedBrandId =
+      dto.brandId === null || dto.brandId === undefined
+        ? 0
+        : Number(dto.brandId);
+
+    let newDto: ProductDto = {
+      name: dto.name,
+      ean: dto.ean,
+      categoryId: checkedCategoryId,
+      brandId: checkedBrandId
+    }
+
+    return newDto;
+  }
+
   getProducts() {
     return this.http.get<Product[]>(this.apiUrl);
   }
 
-  createProduct(name: string, ean: string, categoryIdToCheck: number, brandIdToCheck: number) {
-    const categoryId =
-      categoryIdToCheck === null || categoryIdToCheck === undefined
-        ? null
-        : Number(categoryIdToCheck);
+  addProduct(productDto: ProductDto) {
+    productDto = this.checkDto(productDto);
+    return this.http.post<Product>(`${environment.apiProducts}`, productDto);
+  }
 
-    const brandId =
-      brandIdToCheck === null || brandIdToCheck === undefined
-        ? null
-        : Number(brandIdToCheck);
+  editProduct(id: string, productDto: ProductDto) {
+    productDto = this.checkDto(productDto);
+    return this.http.put(`${environment.apiProducts}/${id}`, productDto);
+  }
 
-    return this.http.post<Product>(`${environment.apiProducts}`, {
-      name,
-      ean,
-      categoryId,
-      brandId
-    });
+  deleteLocation(id: string) {
+    return this.http.delete(`${environment.apiProducts}/${id}`);
   }
 }

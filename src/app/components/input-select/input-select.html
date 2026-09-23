@@ -7,11 +7,11 @@
     class="form-select"
     [id]="id()"
     [name]="name()"
-    [value]="value()"
-    (change)="onChange($event)"
+    [ngModel]="value()"
+    (ngModelChange)="onChange($event)"
     [required]="required()">
 
-    <option value="" disabled>
+    <option value="" disabled hidden>
       {{ placeholder() }}
     </option>
 
@@ -22,9 +22,9 @@
     }
   </select>
 
-  @if (error()) {
-    <div class="text-danger">
-      {{ error() }}
+    <div class="text-danger input-error">
+      @if (error()) {
+        {{ error() }}
+      }
     </div>
-  }
 </div>

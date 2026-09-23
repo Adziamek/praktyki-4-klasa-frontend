@@ -12,33 +12,9 @@
         <li class="list-group-item">Amount of products: {{ productsCount }}</li>
         <li class="list-group-item">Amount of locations: {{ locationsCount }}</li>
     </ul>
-</div>
 
-<div class="mx-5 mt-5" style="width: 90%;">
-    <h2>Products:</h2>
-    
     @if (errorMessage) {
     <div class="alert alert-danger">{{ errorMessage }}</div>
     }
 
-    <p>Liczba produktów: {{ products.length }}</p>
-
-    <table class="table w-30">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">EAN</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (product of products; track product.id) {
-            <tr>
-                <th scope="row">{{ product.id }}</th>
-                <td>{{ product.name }}</td>
-                <td>{{ product.ean }}</td>
-            </tr>
-            }
-        </tbody>
-    </table>
 </div>

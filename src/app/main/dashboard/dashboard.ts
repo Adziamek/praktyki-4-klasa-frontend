@@ -16,7 +16,6 @@ export class Dashboard {
   private changeDetector = inject(ChangeDetectorRef);
 
   username: string | null = null;
-  products: Product[] = [];
   errorMessage: string | null = null;
   productsCount = 0;
   locationsCount = 0;
@@ -26,12 +25,11 @@ export class Dashboard {
 
     this.productService.getProducts().subscribe({
       next: products => {
-        this.products = products;
         this.productsCount = products.length;
         this.changeDetector.detectChanges();
       },
       error: error => {
-        this.errorMessage = 'Nie udało się pobrać listy produktów.';
+        this.errorMessage = "Can't connect to database.";
         console.error('Error:', error);
         this.changeDetector.detectChanges();
       },
@@ -43,6 +41,7 @@ export class Dashboard {
         this.changeDetector.detectChanges();
       },
       error: error => {
+        this.errorMessage += "Can't connect to database.";
         console.error('Error:', error);
       }
     });

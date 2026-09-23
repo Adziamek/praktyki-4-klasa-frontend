@@ -6,7 +6,7 @@
     <ul class="nav nav-pills">
         <app-nav-element navText="Dashboard" routerLink="/dashboard" />
 
-        <app-nav-element navText="Create" routerLink="/create" [condition]="isAdministrator() || isWarehouseman()" />
+        <app-nav-element navText="Products" routerLink="/products" [condition]="isAdministrator() || isWarehouseman()" />
 
         <app-nav-element navText="Locations" routerLink="/locations" [condition]="isAdministrator() || isWarehouseman()" />
 
