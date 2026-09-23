@@ -1,44 +1,42 @@
 <div class="d-flex justify-content-center align-items-center" style="height: 25vh;">
-    @if (username) {
-    <h2 class="alert alert-info" id="message">Hi, {{ username }}.</h2>
-    } @else {
-    <h2 class="alert alert-info" id="message">Please log in to continue.</h2>
-    }
+  @if (username) {
+  <h2 class="alert alert-info" id="message">Hi, {{ username }}.</h2>
+  } @else {
+  <h2 class="alert alert-info" id="message">Please log in to continue.</h2>
+  }
 </div>
 
 <div class="mx-5">
-    <h2>Summary:</h2>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Amount of products: {{ productsCount }}</li>
-        <li class="list-group-item">Amount of locations: {{ locationsCount }}</li>
-    </ul>
+  <h2>Summary:</h2>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Amount of products: {{ productsCount }}</li>
+    <li class="list-group-item">Amount of locations: {{ locationsCount }}</li>
+  </ul>
 </div>
 
 <div class="mx-5 mt-5" style="width: 90%;">
-    <h2>Products:</h2>
-    
-    @if (errorMessage) {
-    <div class="alert alert-danger">{{ errorMessage }}</div>
-    }
+  <h2>Products:</h2>
 
-    <p>Liczba produktów: {{ products.length }}</p>
+  @if (errorMessage) {
+  <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
 
-    <table class="table w-30">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">EAN</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (product of products; track product.id) {
-            <tr>
-                <th scope="row">{{ product.id }}</th>
-                <td>{{ product.name }}</td>
-                <td>{{ product.ean }}</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+  <p>Liczba produktów: {{ products.length }}</p>
+
+  <table class="table w-30">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">EAN</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of products; track product.id) {
+      <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.ean }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>
