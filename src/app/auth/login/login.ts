@@ -25,20 +25,27 @@ export class Login {
       return;
     }
 
-
     this.authService.login(
       this.username,
       this.password
     ).subscribe({
       next: (response) => {
         let token: string = (response as any).token.result; 
+
+        if (token == null) {
+          this.errorMessage.set('Invalid username or password');
+          return;
+        }
+
+        this.errorMessage = signal('');
+
         this.authService.saveToken(token);
 
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
+        console.log("EEEEEE");
         console.error('Login failed:', error);
-        this.errorMessage.set('Invalid username or password');
       }
     });
   }

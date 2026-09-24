@@ -18,7 +18,7 @@
             id="name"
             name="name"
             [required]="true"
-            [error]="nameError()"
+            [error]="fieldErrors()['Name']"
             [(ngModel)]="addProductData.name"
           />
 
@@ -27,7 +27,7 @@
             id="ean"
             name="ean"
             [required]="true"
-            [error]="eanError()"
+            [error]="fieldErrors()['Ean']"
             [(ngModel)]="addProductData.ean"
           />
 
@@ -39,7 +39,7 @@
             [options]="categories"
             [value]="addProductData.categoryId"
             (valueChange)="addProductData.categoryId = +$event"
-            [error]="categoryError()"
+            [error]="fieldErrors()['CategoryId']"
             [required]="true"
           />
 
@@ -51,7 +51,7 @@
             [options]="brands"
             [value]="addProductData.brandId"
             (valueChange)="addProductData.brandId = +$event"
-            [error]="brandError()"
+            [error]="fieldErrors()['BrandId']"
             [required]="true"
           />
 
@@ -86,7 +86,7 @@
                         id="code"
                         name="code"
                         [required]="true"
-                        [error]="nameError()"
+                        [error]="fieldErrors()['Name']"
                         [(ngModel)]="editProductData.name"
                     />
 
@@ -95,7 +95,7 @@
                         id="ean"
                         name="ean"
                         [required]="true"
-                        [error]="eanError()"
+                        [error]="fieldErrors()['Ean']"
                         [(ngModel)]="editProductData.ean"
                     />
 
@@ -107,7 +107,7 @@
                       [options]="categories"
                       [value]="editProductData.categoryId"
                       (valueChange)="editProductData.categoryId = +$event"
-                      [error]="categoryError()"
+                      [error]="fieldErrors()['CategoryId']"
                       [required]="true"
                     />
 
@@ -119,7 +119,7 @@
                       [options]="brands"
                       [value]="editProductData.brandId"
                       (valueChange)="editProductData.brandId = +$event"
-                      [error]="brandError()"
+                      [error]="fieldErrors()['BrandId']"
                       [required]="true"
                     />
 
