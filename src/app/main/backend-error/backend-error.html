@@ -1,0 +1,11 @@
+@if (backendErrorService.visible()) {
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Connection error: Backend</strong>
+        <button type="button" class="btn-close ms-2" aria-label="Close" (click)="dismiss()"></button>
+      </div>
+      <div class="toast-body">Backend nie jest podłączony</div>
+    </div>
+  </div>
+}
