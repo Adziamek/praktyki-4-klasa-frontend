@@ -1,4 +1,4 @@
-<div class="mb-3">
+<div>
     <label [for]="id()" class="form-label">{{ label() }}</label>
 
     <input
@@ -12,9 +12,9 @@
         [required]="required()"
     >
 
-    @if (error()) {
-        <div class="text-danger">
-            {{ error() }}
-        </div>
-    }
+    <div class="text-danger input-error">
+      @if (error()) {
+        {{ error() }}
+      }
+    </div>
 </div>

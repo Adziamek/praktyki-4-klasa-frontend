@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Location } from './location';
+import { LocationDto } from './locationDto';
 
 @Injectable({
     providedIn: 'root'
@@ -21,32 +22,16 @@ export class LocationsService {
     }
 
     addLocation(
-      code: string,
-      warehouseCode: string | null,
-      name: string,
-      isActive: boolean
+      locationDto: LocationDto
     ) {
-      return this.http.post(`${this.api}`, {
-        code,
-        warehouseCode,
-        name,
-        isActive
-      });
+      return this.http.post(`${this.api}`, locationDto);
     }
 
     editLocation(
       id: number,
-      code: string,
-      warehouseCode: string,
-      name: string,
-      isActive: boolean
+      locationDto: LocationDto
     ) {
-      return this.http.put(`${this.api}/${id}`, {
-        code,
-        warehouseCode,
-        name,
-        isActive
-      });
+      return this.http.put(`${this.api}/${id}`, locationDto);
     }
 
     deleteLocation(id: number) {

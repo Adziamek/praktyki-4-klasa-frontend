@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
 import { LocationsService  } from '../../service/location-service/locations-service';
 import { Location } from '../../service/location-service/location';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,7 @@ import { SubmitButton } from '../../components/submit-button/submit-button';
 import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 import { Warehouse } from '../../service/warehouse-service/warehouse';
 import { WarehouseService } from '../../service/warehouse-service/warehouse-service';
+import { LocationDto } from '../../service/location-service/locationDto';
 
 @Component({
   imports: [FormsModule, InputString,InputSelect, SubmitButton, InfoErrorBox],
@@ -15,7 +16,7 @@ import { WarehouseService } from '../../service/warehouse-service/warehouse-serv
   styleUrl: './locations.css',
   templateUrl: './locations.html',
 })
-export class Locations {
+export class Locations implements OnInit {
     private locationService = inject(LocationsService);
     private changeDetector = inject(ChangeDetectorRef);
     private warehouseService = inject(WarehouseService);
@@ -27,19 +28,20 @@ export class Locations {
     locations: Location[] = [];
     warehouses: Warehouse[] = [];
 
+    addLocationData: LocationDto = {
+        code: '',
+        warehouseCode: null,
+        name: '',
+        isActive: false
+    }
+    
     id = -1;
-
-    // For adding
-    addCode = '';
-    addWarehouseCode: string | null = null;
-    addName = '';
-    addIsActive = false;
-
-    // For editing
-    editCode = '';
-    editWarehouseCode = '';
-    editName = '';
-    editIsActive = false;
+    editLocationData: LocationDto = {
+        code: '',
+        warehouseCode: null,
+        name: '',
+        isActive: false
+    };
 
     infoMessage = signal('');
     errorMessage = signal('');
@@ -47,7 +49,7 @@ export class Locations {
     warehouseCodeError = signal('');
     nameError = signal('');
 
-    constructor() {
+    ngOnInit(): void {
         this.showLocations();
 
         this.warehouseService.getAllWarehouses().subscribe({
@@ -74,10 +76,12 @@ export class Locations {
             return;
 
         this.id = id;
-        this.editCode = location.code;
-        this.editWarehouseCode = location.warehouseCode;
-        this.editName = location.name;
-        this.editIsActive = location.isActive;
+        this.editLocationData = {
+            code: location.code,
+            warehouseCode: location.warehouseCode,
+            name: location.name,
+            isActive: location.isActive
+        };
 
         this.clearMessages();
 
@@ -131,10 +135,7 @@ export class Locations {
         this.clearMessages();
 
         this.locationService.addLocation(
-            this.addCode,
-            this.addWarehouseCode,
-            this.addName,
-            this.addIsActive
+            this.addLocationData
         ).subscribe({
             next: () => {
                 this.infoMessage.set("Location added.");
@@ -161,10 +162,7 @@ export class Locations {
 
         this.locationService.editLocation(
             this.id,
-            this.editCode,
-            this.editWarehouseCode,
-            this.editName,
-            this.editIsActive
+            this.editLocationData
         ).subscribe({
             next: () => {
                 this.infoMessage.set("Location changed.");

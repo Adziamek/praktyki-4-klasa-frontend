@@ -1,0 +1,195 @@
+<!-- -------- Form -------- -->
+<div
+    class="location-panel position-fixed top-0 start-0 h-100 bg-white shadow"
+    [class.open]="isSideOpen()">
+
+    <button
+        class="toggle-button btn btn-primary position-absolute top-50"
+        (click)="openCloseSide()">
+        {{ isSideOpen() ? '<' : '>' }}
+    </button>
+
+    <div class="p-4">
+        <h5 class="mb-3">Add Product</h5>
+
+        <form (ngSubmit)="addProduct()">
+          <app-input-string
+            label="Name"
+            id="name"
+            name="name"
+            [required]="true"
+            [error]="nameError()"
+            [(ngModel)]="addProductData.name"
+          />
+
+          <app-input-string
+            label="EAN"
+            id="ean"
+            name="ean"
+            [required]="true"
+            [error]="eanError()"
+            [(ngModel)]="addProductData.ean"
+          />
+
+          <app-input-select
+            label="Category"
+            id="categoryId"
+            name="categoryId"
+            placeholder="Select Category"
+            [options]="categories"
+            [value]="addProductData.categoryId"
+            (valueChange)="addProductData.categoryId = +$event"
+            [error]="categoryError()"
+            [required]="true"
+          />
+
+          <app-input-select
+            label="Brand"
+            id="brandId"
+            name="brandId"
+            placeholder="Select Brand"
+            [options]="brands"
+            [value]="addProductData.brandId"
+            (valueChange)="addProductData.brandId = +$event"
+            [error]="brandError()"
+            [required]="true"
+          />
+
+          <app-submit-button buttonText="Add" />
+
+          <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
+        </form>
+    </div>
+</div>
+
+<!-- -------- Edit -------- -->
+@if (isEditOpen()) {
+    <div class="modal-overlay">
+
+        <div
+            class="modal-window bg-white rounded shadow"
+            (click)="$event.stopPropagation()">
+
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                <h5 class="mb-0">Edit Product</h5>
+                <button
+                    class="btn btn-secondary"
+                    (click)="closeEdit()">
+                    Close
+                </button>
+            </div>
+
+            <div class="p-3 border-top">
+                <form (ngSubmit)="editProduct()">
+                    <app-input-string
+                        label="Code"
+                        id="code"
+                        name="code"
+                        [required]="true"
+                        [error]="nameError()"
+                        [(ngModel)]="editProductData.name"
+                    />
+
+                    <app-input-string
+                        label="Ean"
+                        id="ean"
+                        name="ean"
+                        [required]="true"
+                        [error]="eanError()"
+                        [(ngModel)]="editProductData.ean"
+                    />
+
+                    <app-input-select
+                      label="Category"
+                      id="categoryId"
+                      name="categoryId"
+                      placeholder="Select Category"
+                      [options]="categories"
+                      [value]="editProductData.categoryId"
+                      (valueChange)="editProductData.categoryId = +$event"
+                      [error]="categoryError()"
+                      [required]="true"
+                    />
+
+                    <app-input-select
+                      label="Brand"
+                      id="brandId"
+                      name="brandId"
+                      placeholder="Select Brand"
+                      [options]="brands"
+                      [value]="editProductData.brandId"
+                      (valueChange)="editProductData.brandId = +$event"
+                      [error]="brandError()"
+                      [required]="true"
+                    />
+
+                    <app-submit-button buttonText="Edit" />
+
+                    <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<!-- -------- Delete -------- -->
+@if (isDeleteOpen()) {
+    <div class="modal-overlay">
+
+        <div
+            class="modal-window bg-white rounded shadow"
+            (click)="$event.stopPropagation()">
+
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                <h5 class="mb-0">Delete Product</h5>
+                <button
+                        class="btn btn-secondary"
+                        (click)="closeDelete()">
+                        Close
+                    </button>
+            </div>
+
+            <div class="p-3 border-top text-center">
+                @if (!infoMessage() && !errorMessage()) {
+                    <p>Are you sure?</p>
+
+                    <button class="btn btn-danger" (click)="deleteProduct();">Delete</button>
+                } @else {
+                    <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
+                }
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<!-- -------- Table -------- -->
+<div class="mx-auto" style="max-width: 90%;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Ean</th>
+                <th scope="col">CategoryId</th>
+                <th scope="col">BrandId</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (product of products; track product.id) {
+                <tr>
+                    <td scope="row">{{ product.name }}</td>
+                    <td>{{ product.ean }}</td>
+                    <td>{{ product.categoryId }}</td>
+                    <td>{{ product.brandId }}</td>
+                    <td><button class="btn btn-secondary" (click)="openEdit(product.id);">✎</button></td>
+                    <td><button class="btn btn-danger" (click)="openDelete(product.id);">🗑︎</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

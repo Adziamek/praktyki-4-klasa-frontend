@@ -1,5 +1,4 @@
-export interface Product {
-  id: string;
+export interface ProductDto {
   name: string;
   ean: string;
   categoryId: number;
