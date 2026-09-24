@@ -13,45 +13,39 @@
         <h5 class="mb-3">Add Location</h5>
 
         <form (ngSubmit)="addLocation()">
-            <app-input-string 
+            <app-input-string
                 label="Code"
                 id="code"
                 name="code"
                 placeholder="L-XXX"
                 [error]="codeError()"
-                [(ngModel)]="addCode"
+                [(ngModel)]="addLocationData.code"
             />
 
-            <div class="mb-3">
-                <label for="choose-warehouse-code">Warehouse Code</label>
-                <select
-                    id="choose-warehouse-code"
-                    class="form-select"
-                    name="warehouseCode"
-                    [(ngModel)]="addWarehouseCode">
+          <app-input-select
+            label="Warehouse"
+            id="choose-warehouse-code"
+            name="warehouseCode"
+            placeholder="Choose warehouse"
+            [options]="warehouses"
+            valueKey="code"
+            labelKey="code"
+            [value]="addLocationData.warehouseCode ?? ''"
+            (valueChange)="addLocationData.warehouseCode = $event.toString()"
+            [error]="warehouseCodeError()"
+            [required]="true"
+          />
 
-                    @for (warehouse of warehouses; track warehouse.id) {
-                        <option [value]="warehouse.code">{{ warehouse.code }}</option>
-                    }
-                </select>
-
-                @if (warehouseCodeError()) {
-                    <div class="text-danger">
-                        {{ warehouseCodeError() }}
-                    </div>
-                }
-            </div>
-
-            <app-input-string 
+            <app-input-string
                 label="Name"
                 id="name"
                 name="name"
                 [error]="nameError()"
-                [(ngModel)]="addName"
+                [(ngModel)]="addLocationData.name"
             />
 
             <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="addIsActive">
+                <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="addLocationData.isActive">
                 <label class="form-check-label" for="isActive">Is active</label>
             </div>
 
@@ -82,34 +76,39 @@
 
             <div class="p-3 border-top">
                 <form (ngSubmit)="editLocation()">
-                    <app-input-string 
+                    <app-input-string
                         label="Code"
                         id="code"
                         name="code"
                         placeholder="L-XXX"
                         [error]="codeError()"
-                        [(ngModel)]="editCode"
+                        [(ngModel)]="editLocationData.code"
                     />
 
-                    <app-input-string 
+                    <app-input-select
                         label="Warehouse Code"
                         id="warehouseCode"
                         name="warehouseCode"
-                        placeholder="WH-XX"
+                        placeholder="Choose warehouse"
+                        [options]="warehouses"
+                        valueKey="code"
+                        labelKey="code"
+                        [value]="editLocationData.warehouseCode ?? ''"
+                        (valueChange)="editLocationData.warehouseCode = $event.toString()"
                         [error]="warehouseCodeError()"
-                        [(ngModel)]="editWarehouseCode"
+                        [required]="true"
                     />
 
-                    <app-input-string 
+                    <app-input-string
                         label="Name"
                         id="name"
                         name="name"
                         [error]="nameError()"
-                        [(ngModel)]="editName"
+                        [(ngModel)]="editLocationData.name"
                     />
 
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="editIsActive">
+                        <input class="form-check-input" type="checkbox" name="isActive" id="isActive" [(ngModel)]="editLocationData.isActive">
                         <label class="form-check-label" for="isActive">Is active</label>
                     </div>
 
@@ -158,12 +157,9 @@
 
 <!-- -------- Table -------- -->
 <div class="mx-auto" style="width: 90%;">
-    <p>Liczba lokalizacji: {{ locations.length }}</p>
-
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">ID</th>
                 <th scope="col">Code</th>
                 <th scope="col">Warehouse Code</th>
                 <th scope="col">Name</th>
@@ -175,8 +171,7 @@
         <tbody>
             @for (location of locations; track location.id) {
                 <tr>
-                    <th scope="row">{{ location.id }}</th>
-                    <td>{{ location.code }}</td>
+                    <th scope="row">{{ location.code }}</th>
                     <td>{{ location.warehouseCode }}</td>
                     <td>{{ location.name }}</td>
                     <td>{{ location.isActive ? '✓' : '✗' }}</td>

@@ -7,13 +7,14 @@ import { MainLayout } from './layouts/main-layout/main-layout';
 import { Dashboard } from './main/dashboard/dashboard';
 import { Locations } from './main/locations/locations';
 import { Settings } from './main/settings/settings';
-import { Create } from './products/forms/create/create';
+import { Products } from './main/products/products';
+
+import { LandingPage } from './main/landing/landing';
 
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
+        component: LandingPage,
     },
     {
         path: 'login',
@@ -49,8 +50,8 @@ export const routes: Routes = [
                 canActivate: [authGuard]
             },
             {
-              path: 'create',
-              component: Create,
+              path: 'products',
+              component: Products,
               canActivate: [authGuard]
             }
         ]

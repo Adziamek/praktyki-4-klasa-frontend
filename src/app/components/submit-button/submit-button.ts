@@ -1,4 +1,6 @@
 import { Component, input } from '@angular/core';
+import { Subject, debounceTime } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [],
@@ -8,4 +10,23 @@ import { Component, input } from '@angular/core';
 })
 export class SubmitButton {
   buttonText = input.required<string>();
+
+  private clickSubject = new Subject<void>();
+
+  constructor() {
+    this.clickSubject
+      .pipe(
+        debounceTime(300),
+        takeUntilDestroyed()
+      )
+      .subscribe(() => {
+        this.onSubmit();
+      });
+  }
+
+  handleClick(): void {
+    this.clickSubject.next();
+  }
+
+  private onSubmit(): void {}
 }

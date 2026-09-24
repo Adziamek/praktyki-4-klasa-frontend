@@ -7,36 +7,14 @@
 </div>
 
 <div class="mx-5">
-  <h2>Summary:</h2>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">Amount of products: {{ productsCount }}</li>
-    <li class="list-group-item">Amount of locations: {{ locationsCount }}</li>
-  </ul>
-</div>
+    <h2>Summary:</h2>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Amount of products: {{ productsCount }}</li>
+        <li class="list-group-item">Amount of locations: {{ locationsCount }}</li>
+    </ul>
 
-<div class="mx-5 mt-5" style="width: 90%;">
-  <h2>Products:</h2>
+    @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+    }
 
-  @if (errorMessage) {
-  <div class="alert alert-danger">{{ errorMessage }}</div>
-  }
-
-  <p>Liczba produktów: {{ products.length }}</p>
-
-  <table class="table w-30">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">EAN</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (product of products; track product.id) {
-      <tr>
-        <td>{{ product.name }}</td>
-        <td>{{ product.ean }}</td>
-      </tr>
-      }
-    </tbody>
-  </table>
 </div>

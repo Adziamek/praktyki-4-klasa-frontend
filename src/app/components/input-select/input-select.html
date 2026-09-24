@@ -1,0 +1,30 @@
+<div class="mb-3">
+  <label [for]="id()" class="form-label">
+    {{ label() }}
+  </label>
+
+  <select
+    class="form-select"
+    [id]="id()"
+    [name]="name()"
+    [ngModel]="value()"
+    (ngModelChange)="onChange($event)"
+    [required]="required()">
+
+    <option value="" disabled hidden>
+      {{ placeholder() }}
+    </option>
+
+    @for (option of options(); track option.id) {
+      <option [value]="option[valueKey()]">
+        {{ option[labelKey()] }}
+      </option>
+    }
+  </select>
+
+    <div class="text-danger input-error">
+      @if (error()) {
+        {{ error() }}
+      }
+    </div>
+</div>
