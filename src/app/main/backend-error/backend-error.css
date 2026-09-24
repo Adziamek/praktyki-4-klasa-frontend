@@ -1,0 +1,7 @@
+.toast-container {
+  z-index: 1090;
+}
+
+.toast {
+  width: min(100%, 24rem);
+}
