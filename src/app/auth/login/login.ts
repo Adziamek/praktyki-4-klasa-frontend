@@ -44,7 +44,6 @@ export class Login {
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        console.log("EEEEEE");
         console.error('Login failed:', error);
       }
     });
