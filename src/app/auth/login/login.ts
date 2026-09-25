@@ -6,7 +6,12 @@ import { InputString } from '../../components/input-string/input-string';
 import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 
 @Component({
-  imports: [RouterLink, FormsModule, InputString, InfoErrorBox],
+  imports: [
+    RouterLink,
+    FormsModule,
+    InputString,
+    InfoErrorBox
+  ],
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',
@@ -17,11 +22,16 @@ export class Login {
 
   errorMessage = signal('');
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
- login() {
+  login() {
     if (!this.username || !this.password) {
-      this.errorMessage.set('Username and password are required.');
+      this.errorMessage.set(
+        'Username and password are required.'
+      );
       return;
     }
 
@@ -30,22 +40,21 @@ export class Login {
       this.password
     ).subscribe({
       next: (response) => {
-        let token: string = (response as any).token.result; 
-
-        if (token == null) {
-          this.errorMessage.set('Invalid username or password');
-          return;
-        }
-
-        this.errorMessage = signal('');
+        const token = response.token;
 
         this.authService.saveToken(token);
 
         this.router.navigate(['/dashboard']);
       },
+
       error: (error) => {
         console.error('Login failed:', error);
+
+        this.errorMessage.set(
+          'Invalid username or password'
+        );
       }
     });
   }
 }
+
