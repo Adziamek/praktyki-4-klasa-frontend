@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
-import { LocationsService  } from '../../service/location-service/locations-service';
+import { LocationsService  } from '../../service/location-service/locations.service';
 import { Location } from '../../service/location-service/location';
 import { FormsModule } from '@angular/forms';
 import { InputString } from '../../components/input-string/input-string';
@@ -9,6 +9,7 @@ import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 import { Warehouse } from '../../service/warehouse-service/warehouse';
 import { WarehouseService } from '../../service/warehouse-service/warehouse-service';
 import { LocationDto } from '../../service/location-service/locationDto';
+import { ErrorService } from '../../service/error-serivce/error.service';
 
 @Component({
   imports: [FormsModule, InputString,InputSelect, SubmitButton, InfoErrorBox],
@@ -20,6 +21,7 @@ export class Locations implements OnInit {
     private locationService = inject(LocationsService);
     private changeDetector = inject(ChangeDetectorRef);
     private warehouseService = inject(WarehouseService);
+    private errorService = inject(ErrorService);
 
     isSideOpen = signal(false);
     isEditOpen = signal(false);
@@ -45,9 +47,7 @@ export class Locations implements OnInit {
 
     infoMessage = signal('');
     errorMessage = signal('');
-    codeError = signal('');
-    warehouseCodeError = signal('');
-    nameError = signal('');
+    fieldErrors = signal<Record<string, string>>({});
 
     ngOnInit(): void {
         this.showLocations();
@@ -114,10 +114,8 @@ export class Locations implements OnInit {
     clearMessages() {
         this.infoMessage.set('');
         this.errorMessage.set('');
-        this.codeError.set('');
-        this.warehouseCodeError.set('');
-        this.nameError.set('');
-     }
+        this.fieldErrors.set({});
+    }
 
     showLocations() {
         this.locationService.getAllLocations().subscribe({
@@ -142,17 +140,8 @@ export class Locations implements OnInit {
                 this.showLocations();
             },
             error: (error) => {
-                if (error.status === 400 && error.error?.errors) {
-                    const errors = error.error.errors;
-
-                    this.codeError.set(errors.Code?.[0] ?? '');
-                    this.warehouseCodeError.set(errors.WarehouseCode?.[0] ?? '');
-                    this.nameError.set(errors.Name?.[0] ?? '');
-
-                    return;
-                }
-
-                this.errorMessage.set(error.error?.detail ?? 'Adding failed. Please try again.');
+                this.fieldErrors.set(this.errorService.getFieldErrors(error));
+                this.errorMessage.set(this.errorService.getDetail(error, 'Adding failed. Please try again.'));
             }
         })
     }
@@ -169,17 +158,8 @@ export class Locations implements OnInit {
                 this.showLocations();
             },
             error: (error) => {
-                if (error.status === 400 && error.error?.errors) {
-                    const errors = error.error.errors;
-
-                    this.codeError.set(errors.Code?.[0] ?? '');
-                    this.warehouseCodeError.set(errors.WarehouseCode?.[0] ?? '');
-                    this.nameError.set(errors.Name?.[0] ?? '');
-
-                    return;
-                }
-
-                this.errorMessage.set(error.error?.detail ?? 'Editing failed. Please try again.');
+                this.fieldErrors.set(this.errorService.getFieldErrors(error));
+                this.errorMessage.set(this.errorService.getDetail(error, 'Editing failed. Please try again.'));
             }
         })
     }
@@ -191,7 +171,7 @@ export class Locations implements OnInit {
                 this.showLocations();
             },
             error: (error) => {
-                this.errorMessage.set(error.error?.detail ?? 'Deleting failed. Please try again.');
+                this.errorMessage.set(this.errorService.getDetail(error, 'Deleting failed. Please try again.'));
             }
         })
     }

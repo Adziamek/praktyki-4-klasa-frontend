@@ -21,11 +21,11 @@
             [(ngModel)]="password"
         />
 
+        <app-info-error-box [errorMessage]="errorMessage()" />
+
         <div class="mb-3 auth-link-row">
             <p class="text-center mb-0"><a routerLink="/signup">Create an account</a></p>
         </div>
-
-        <app-info-error-box [errorMessage]="errorMessage()" />
 
         <button type="submit" class="btn btn-primary w-100">
             Login

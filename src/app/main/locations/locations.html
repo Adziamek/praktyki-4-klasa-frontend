@@ -18,7 +18,7 @@
                 id="code"
                 name="code"
                 placeholder="L-XXX"
-                [error]="codeError()"
+                [error]="fieldErrors()['Code']"
                 [(ngModel)]="addLocationData.code"
             />
 
@@ -32,7 +32,7 @@
             labelKey="code"
             [value]="addLocationData.warehouseCode ?? ''"
             (valueChange)="addLocationData.warehouseCode = $event.toString()"
-            [error]="warehouseCodeError()"
+            [error]="fieldErrors()['WarehouseCode']"
             [required]="true"
           />
 
@@ -40,7 +40,7 @@
                 label="Name"
                 id="name"
                 name="name"
-                [error]="nameError()"
+                [error]="fieldErrors()['Name']"
                 [(ngModel)]="addLocationData.name"
             />
 
@@ -81,7 +81,7 @@
                         id="code"
                         name="code"
                         placeholder="L-XXX"
-                        [error]="codeError()"
+                        [error]="fieldErrors()['Code']"
                         [(ngModel)]="editLocationData.code"
                     />
 
@@ -95,7 +95,7 @@
                         labelKey="code"
                         [value]="editLocationData.warehouseCode ?? ''"
                         (valueChange)="editLocationData.warehouseCode = $event.toString()"
-                        [error]="warehouseCodeError()"
+                        [error]="fieldErrors()['WarehouseCode']"
                         [required]="true"
                     />
 
@@ -103,7 +103,7 @@
                         label="Name"
                         id="name"
                         name="name"
-                        [error]="nameError()"
+                        [error]="fieldErrors()['Name']"
                         [(ngModel)]="editLocationData.name"
                     />
 

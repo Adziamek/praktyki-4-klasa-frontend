@@ -11,6 +11,7 @@ import { Category } from '../../service/category-service/category';
 import { Brand } from '../../service/brand-service/brand';
 import { CategoryService } from '../../service/category-service/category.service';
 import { BrandService } from '../../service/brand-service/brand.service';
+import { ErrorService } from '../../service/error-serivce/error.service';
 
 @Component({
   imports: [
@@ -28,6 +29,7 @@ export class Products implements OnInit {
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
   private brandService = inject(BrandService);
+  private errorService = inject(ErrorService);
   private changeDetector = inject(ChangeDetectorRef);
 
   isSideOpen = signal(false);
@@ -55,10 +57,7 @@ export class Products implements OnInit {
 
   infoMessage = signal('');
   errorMessage = signal('');
-  nameError = signal('');
-  eanError = signal('');
-  categoryError = signal('');
-  brandError = signal('');
+  fieldErrors = signal<Record<string, string>>({});
 
   ngOnInit(): void {
     this.showProducts();
@@ -100,12 +99,16 @@ export class Products implements OnInit {
   }
 
   openDelete(id: string) {
+    if (this.isSideOpen())
+      this.openCloseSide();
+
+    this.closeEdit();
+
     this.clearMessages();
 
     this.id = id;
     this.isDeleteOpen.set(true);
 
-    this.closeEdit();
   }
 
   closeDelete() {
@@ -117,10 +120,7 @@ export class Products implements OnInit {
   clearMessages() {
     this.infoMessage.set('');
     this.errorMessage.set('');
-    this.nameError.set('');
-    this.eanError.set('');
-    this.categoryError.set('');
-    this.brandError.set('');
+    this.fieldErrors.set({});
   }
 
   showProducts() {
@@ -168,20 +168,10 @@ export class Products implements OnInit {
               this.showProducts();
           },
           error: (error) => {
-            if (error.status === 400 && error.error?.errors) {
-                const errors = error.error.errors;
-
-                this.nameError.set(errors.Name?.[0] ?? '');
-                this.eanError.set(errors.Ean?.[0] ?? '');
-                this.categoryError.set(errors.CategoryId?.[0] ?? '');
-                this.brandError.set(errors.BrandId?.[0] ?? '');
-
-                return;
-            }
-
-            this.errorMessage.set(error.error?.detail ?? 'Adding failed. Please try again.');
+            this.fieldErrors.set(this.errorService.getFieldErrors(error));
+            this.errorMessage.set(this.errorService.getDetail(error, 'Adding failed. Please try again.'));
           }
-      })
+      });
   }
 
   editProduct() {
@@ -196,18 +186,8 @@ export class Products implements OnInit {
               this.showProducts();
           },
           error: (error) => {
-              if (error.status === 400 && error.error?.errors) {
-                  const errors = error.error.errors;
-
-                  this.nameError.set(errors.Name?.[0] ?? '');
-                  this.eanError.set(errors.Ean?.[0] ?? '');
-                  this.categoryError.set(errors.CategoryId?.[0] ?? '');
-                  this.brandError.set(errors.BrandId?.[0] ?? '');
-
-                  return;
-              }
-
-              this.errorMessage.set(error.error?.detail ?? 'Editing failed. Please try again.');
+            this.fieldErrors.set(this.errorService.getFieldErrors(error));
+            this.errorMessage.set(this.errorService.getDetail(error, 'Editing failed. Please try again.'));
           }
       })
   }
@@ -219,7 +199,7 @@ export class Products implements OnInit {
               this.showProducts();
           },
           error: (error) => {
-              this.errorMessage.set(error.error?.detail ?? 'Deleting failed. Please try again.');
+              this.errorMessage.set(this.errorService.getDetail(error, 'Deleting failed. Please try again.'));
           }
       })
   }
