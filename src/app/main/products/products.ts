@@ -1,9 +1,9 @@
 import { Component, signal, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ProductService } from '../../service/products-service/product.service'; 
-import { InputString } from '../../components/input-string/input-string'; 
+import { ProductService } from '../../service/products-service/product.service';
+import { InputString } from '../../components/input-string/input-string';
 import { InputSelect } from '../../components/input-select/input-select';
-import { InfoErrorBox } from '../../components/info-error-box/info-error-box'; 
+import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 import { SubmitButton } from '../../components/submit-button/submit-button';
 import { Product } from '../../service/products-service/product';
 import { ProductDto } from '../../service/products-service/product-dto';
@@ -11,7 +11,8 @@ import { Category } from '../../service/category-service/category';
 import { Brand } from '../../service/brand-service/brand';
 import { CategoryService } from '../../service/category-service/category.service';
 import { BrandService } from '../../service/brand-service/brand.service';
-import { ErrorService } from '../../service/error-serivce/error.service';
+import { ErrorService } from '../../service/error-service/error.service';
+import { CartService } from '../../service/cart-service/cart.service';
 
 @Component({
   imports: [
@@ -31,6 +32,7 @@ export class Products implements OnInit {
   private brandService = inject(BrandService);
   private errorService = inject(ErrorService);
   private changeDetector = inject(ChangeDetectorRef);
+  private cartService = inject(CartService);
 
   isSideOpen = signal(false);
   isEditOpen = signal(false);
@@ -46,7 +48,7 @@ export class Products implements OnInit {
     categoryId: -1,
     brandId: -1
   };
-  
+
   id = '';
   editProductData: ProductDto = {
     name: '',
@@ -203,4 +205,9 @@ export class Products implements OnInit {
           }
       })
   }
+  addToCart(productId: string) {
+    this.cartService.add(productId);
+    console.log('Cart:', this.cartService.items());
+  }
+
 }

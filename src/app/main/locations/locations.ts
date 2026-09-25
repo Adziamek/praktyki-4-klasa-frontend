@@ -9,7 +9,7 @@ import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 import { Warehouse } from '../../service/warehouse-service/warehouse';
 import { WarehouseService } from '../../service/warehouse-service/warehouse-service';
 import { LocationDto } from '../../service/location-service/locationDto';
-import { ErrorService } from '../../service/error-serivce/error.service';
+import { ErrorService } from '../../service/error-service/error.service';
 
 @Component({
   imports: [FormsModule, InputString,InputSelect, SubmitButton, InfoErrorBox],
@@ -36,7 +36,7 @@ export class Locations implements OnInit {
         name: '',
         isActive: false
     }
-    
+
     id = -1;
     editLocationData: LocationDto = {
         code: '',

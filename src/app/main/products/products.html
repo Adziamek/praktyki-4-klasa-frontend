@@ -173,9 +173,10 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Ean</th>
-                <th scope="col">CategoryId</th>
+                <th scope="col">CategoryId </th>
                 <th scope="col">BrandId</th>
                 <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
                 <th scope="col">Delete</th>
             </tr>
         </thead>
@@ -188,6 +189,7 @@
                     <td>{{ product.brandId }}</td>
                     <td><button class="btn btn-secondary" (click)="openEdit(product.id);">✎</button></td>
                     <td><button class="btn btn-danger" (click)="openDelete(product.id);">🗑︎</button></td>
+                    <td><button class="btn btn-danger" (click)="addToCart(product.id);">+</button></td>
                 </tr>
             }
         </tbody>
