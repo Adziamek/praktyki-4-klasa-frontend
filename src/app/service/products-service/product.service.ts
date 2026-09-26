@@ -36,6 +36,9 @@ export class ProductService {
   getProducts() {
     return this.http.get<Product[]>(this.apiUrl);
   }
+  getProduct(id: string) {
+    return this.http.get<Product>(`${environment.apiProducts}/${id}`);
+  }
 
   addProduct(productDto: ProductDto) {
     productDto = this.checkDto(productDto);

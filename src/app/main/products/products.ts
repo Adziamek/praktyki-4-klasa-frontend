@@ -13,6 +13,8 @@ import { CategoryService } from '../../service/category-service/category.service
 import { BrandService } from '../../service/brand-service/brand.service';
 import { ErrorService } from '../../service/error-service/error.service';
 import { CartService } from '../../service/cart-service/cart.service';
+import { ToastNotificationService} from '../../service/toast-service/toast.service';
+import { ToasterNotification} from '../../components/toaster-notification/toaster-notification';
 
 @Component({
   imports: [
@@ -20,7 +22,8 @@ import { CartService } from '../../service/cart-service/cart.service';
     InputString,
     InfoErrorBox,
     SubmitButton,
-    InputSelect
+    InputSelect,
+    ToasterNotification
   ],
   selector: 'app-products',
   styleUrl: './products.css',
@@ -33,6 +36,7 @@ export class Products implements OnInit {
   private errorService = inject(ErrorService);
   private changeDetector = inject(ChangeDetectorRef);
   private cartService = inject(CartService);
+  private toastNotificationService = inject(ToastNotificationService);
 
   isSideOpen = signal(false);
   isEditOpen = signal(false);
@@ -207,7 +211,10 @@ export class Products implements OnInit {
   }
   addToCart(productId: string) {
     this.cartService.add(productId);
-    console.log('Cart:', this.cartService.items());
+    this.toastNotificationService.show({
+      id: 'backend',
+      title: 'cart',
+      message: 'Product added to cart!',
+    });
   }
-
 }

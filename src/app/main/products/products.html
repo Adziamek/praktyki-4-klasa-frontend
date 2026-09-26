@@ -177,7 +177,7 @@
                 <th scope="col">BrandId</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
-                <th scope="col">Delete</th>
+                <th scope="col">Add to cart</th>
             </tr>
         </thead>
         <tbody>
@@ -189,7 +189,7 @@
                     <td>{{ product.brandId }}</td>
                     <td><button class="btn btn-secondary" (click)="openEdit(product.id);">✎</button></td>
                     <td><button class="btn btn-danger" (click)="openDelete(product.id);">🗑︎</button></td>
-                    <td><button class="btn btn-danger" (click)="addToCart(product.id);">+</button></td>
+                    <td><button class="btn btn-success" (click)="addToCart(product.id);">+</button></td>
                 </tr>
             }
         </tbody>

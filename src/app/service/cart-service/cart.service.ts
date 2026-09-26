@@ -1,10 +1,28 @@
-import {Injectable, signal, computed} from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { switchMap } from 'rxjs';
 import { CartItem } from './cart-item';
+import { environment } from '../../environments/environment/environment';
+
+interface CurrentUser {
+  id: string;
+  email: string;
+}
+
+interface CreateOrderRequest {
+  userId: string;
+  items: CartItem[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
+
+  private http = inject(HttpClient);
+
+  private usersApi = `${environment.apiUsers}`;
+  private ordersApi = `${environment.apiOrders}`;
 
   private itemsSignal = signal<CartItem[]>([]);
 
@@ -59,5 +77,20 @@ export class CartService {
 
   clear(): void {
     this.itemsSignal.set([]);
+  }
+
+  checkout() {
+    return this.http
+      .get<CurrentUser>(`${this.usersApi}/me`)
+      .pipe(
+        switchMap(user => {
+          const request: CreateOrderRequest = {
+            userId: user.id,
+            items: this.itemsSignal()
+          };
+
+          return this.http.post(this.ordersApi, request);
+        })
+      );
   }
 }

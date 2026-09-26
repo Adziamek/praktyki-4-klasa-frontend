@@ -12,7 +12,7 @@ import { LocationDto } from '../../service/location-service/locationDto';
 import { ErrorService } from '../../service/error-service/error.service';
 
 @Component({
-  imports: [FormsModule, InputString,InputSelect, SubmitButton, InfoErrorBox],
+  imports: [FormsModule, InputString, InputSelect, SubmitButton, InfoErrorBox],
   selector: 'app-locations',
   styleUrl: './locations.css',
   templateUrl: './locations.html',

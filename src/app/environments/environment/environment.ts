@@ -5,5 +5,6 @@ export const environment = {
   apiProducts: 'https://localhost:7103/api/products',
   apiCategories: 'https://localhost:7103/api/categories',
   apiBrands: 'https://localhost:7103/api/brands',
-  apiWarehouses: 'https://localhost:7103/api/warehouses'
+  apiWarehouses: 'https://localhost:7103/api/warehouses',
+  apiOrders: 'https://localhost:7103/api/customerorders'
 };
