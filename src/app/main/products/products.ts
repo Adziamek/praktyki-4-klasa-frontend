@@ -16,6 +16,7 @@ import { LocationsService } from '../../service/location-service/locations.servi
 import { ErrorService } from '../../service/error-service/error.service';
 import { CartService } from '../../service/cart-service/cart.service';
 import { ToastNotificationService } from '../../service/toast-service/toast.service';
+import { ProductLocationEditor } from './product-location-editor';
 @Component({
   imports: [
     FormsModule,
@@ -23,7 +24,7 @@ import { ToastNotificationService } from '../../service/toast-service/toast.serv
     InfoErrorBox,
     SubmitButton,
     InputSelect,
-
+    ProductLocationEditor,
   ],
   selector: 'app-products',
   styleUrl: './products.css',
@@ -123,17 +124,6 @@ export class Products implements OnInit {
     this.clearMessages();
   }
 
-  addEditProductLocation() {
-    this.editProductData.locations.push({
-      locationId: -1,
-      quantity: 0
-    });
-  }
-
-  removeEditProductLocation(index: number) {
-    this.editProductData.locations.splice(index, 1);
-  }
-
   openDelete(id: number) {
     if (this.isSideOpen())
       this.openCloseSide();
@@ -198,15 +188,6 @@ export class Products implements OnInit {
         console.error('Error loading locations:', error);
       }
     });
-  }
-  addProductLocation() {
-    this.addProductData.locations.push({
-      locationId: -1,
-      quantity: 0
-    });
-  }
-  removeProductLocation(index: number) {
-    this.addProductData.locations.splice(index, 1);
   }
   addProduct() {
       this.clearMessages();
