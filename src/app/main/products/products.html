@@ -55,6 +55,78 @@
             [required]="true"
           />
 
+          <div class="mt-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="mb-0">Locations</h6>
+
+              <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                (click)="addProductLocation()">
+                + Add location
+              </button>
+            </div>
+
+            <table class="table table-sm align-middle">
+              <thead>
+              <tr>
+                <th>Location</th>
+                <th style="width: 120px;">Quantity</th>
+                <th style="width: 60px;"></th>
+              </tr>
+              </thead>
+
+              <tbody>
+
+                @for (location of addProductData.locations; track $index) {
+
+                  <tr>
+
+                    <td>
+                      <app-input-select
+                        [label]="''"
+                        [id]="'location-' + $index"
+                        [name]="'location-' + $index"
+                        placeholder="Select location"
+                        [options]="locations"
+                        [value]="location.locationId"
+                        (valueChange)="location.locationId = +$event"
+                        [required]="true"
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                        type="number"
+                        class="form-control"
+                        min="0"
+                        [name]="'quantity-' + $index"
+                        [(ngModel)]="location.quantity"
+                        required
+                      />
+                    </td>
+
+                    <td class="text-end">
+
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-danger"
+                        (click)="removeProductLocation($index)">
+                        🗑
+                      </button>
+
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+            </table>
+
+          </div>
+
           <app-submit-button buttonText="Add" />
 
           <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
@@ -123,6 +195,70 @@
                       [required]="true"
                     />
 
+                  <div class="mt-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h6 class="mb-0">Locations</h6>
+
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-sm"
+                        (click)="addEditProductLocation()">
+                        + Add location
+                      </button>
+                    </div>
+
+                    <table class="table table-sm align-middle">
+                      <thead>
+                      <tr>
+                        <th>Location</th>
+                        <th style="width: 120px;">Quantity</th>
+                        <th style="width: 60px;"></th>
+                      </tr>
+                      </thead>
+
+                      <tbody>
+                        @for (location of editProductData.locations; track $index) {
+                          <tr>
+                            <td>
+                              <app-input-select
+                                label=""
+                                [id]="'edit-location-' + $index"
+                                [name]="'edit-location-' + $index"
+                                placeholder="Select location"
+                                [options]="locations"
+                                [value]="location.locationId"
+                                (valueChange)="location.locationId = +$event"
+                                [required]="true"
+                              />
+                            </td>
+
+                            <td>
+                              <input
+                                type="number"
+                                class="form-control"
+                                min="0"
+                                [name]="'edit-quantity-' + $index"
+                                [(ngModel)]="location.quantity"
+                                required
+                              />
+                            </td>
+
+                            <td class="text-end">
+                              <button
+                                type="button"
+                                class="btn btn-danger btn-sm"
+                                (click)="removeEditProductLocation($index)">
+                                🗑
+                              </button>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+
+                  </div>
+
                     <app-submit-button buttonText="Edit" />
 
                     <app-info-error-box [infoMessage]="infoMessage()" [errorMessage]="errorMessage()" />
@@ -173,8 +309,9 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Ean</th>
-                <th scope="col">CategoryId </th>
-                <th scope="col">BrandId</th>
+                <th scope="col">Category </th>
+                <th scope="col">Brand</th>
+                <th scope="col">Stock</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
                 <th scope="col">Add to cart</th>
@@ -185,8 +322,9 @@
                 <tr>
                     <td scope="row">{{ product.name }}</td>
                     <td>{{ product.ean }}</td>
-                    <td>{{ product.categoryId }}</td>
-                    <td>{{ product.brandId }}</td>
+                    <td>{{ product.category}}</td>
+                    <td>{{ product.brand }}</td>
+                    <td>{{ product.quantity }}</td>
                     <td><button class="btn btn-secondary" (click)="openEdit(product.id);">✎</button></td>
                     <td><button class="btn btn-danger" (click)="openDelete(product.id);">🗑︎</button></td>
                     <td><button class="btn btn-success" (click)="addToCart(product.id);">+</button></td>

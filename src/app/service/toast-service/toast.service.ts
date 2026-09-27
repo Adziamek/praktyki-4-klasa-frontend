@@ -1,9 +1,18 @@
 import { Injectable, signal } from '@angular/core';
 
+export type ToastVariant =
+  | 'success'
+  | 'danger'
+  | 'warning'
+  | 'info'
+  | 'primary'
+  | 'secondary';
+
 export interface ToastNotification {
   id: string;
   title: string;
   message: string;
+  variant?: ToastVariant;
 }
 
 @Injectable({

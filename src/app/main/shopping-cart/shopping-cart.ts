@@ -48,21 +48,21 @@ export class ShoppingCart {
     });
   }
 
-  getQuantity(productId: string): number {
+  getQuantity(productId: number): number {
     return this.cartService.items()
       .find(item => item.productId === productId)
       ?.quantity ?? 0;
   }
 
-  increase(productId: string): void {
+  increase(productId: number): void {
     this.cartService.add(productId);
   }
 
-  decrease(productId: string): void {
+  decrease(productId: number): void {
     this.cartService.decrease(productId);
   }
 
-  remove(productId: string): void {
+  remove(productId: number): void {
     this.cartService.remove(productId);
 
     this.products.update(products =>

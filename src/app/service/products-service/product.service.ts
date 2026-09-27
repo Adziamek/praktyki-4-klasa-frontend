@@ -10,9 +10,9 @@ import { ProductDto } from './product-dto';
 export class ProductService {
   private http = inject(HttpClient);
 
-  private apiUrl =`${environment.apiProducts}`;
+  private apiUrl = `${environment.apiProducts}`;
 
-  checkDto(dto: ProductDto) : ProductDto {
+  checkDto(dto: ProductDto): ProductDto {
     const checkedCategoryId =
       dto.categoryId === null || dto.categoryId === undefined
         ? 0
@@ -23,12 +23,14 @@ export class ProductService {
         ? 0
         : Number(dto.brandId);
 
-    let newDto: ProductDto = {
+    const newDto: ProductDto = {
       name: dto.name,
       ean: dto.ean,
       categoryId: checkedCategoryId,
-      brandId: checkedBrandId
-    }
+      brandId: checkedBrandId,
+      price: dto.price,
+      locations: dto.locations
+    };
 
     return newDto;
   }
@@ -36,21 +38,32 @@ export class ProductService {
   getProducts() {
     return this.http.get<Product[]>(this.apiUrl);
   }
-  getProduct(id: string) {
-    return this.http.get<Product>(`${environment.apiProducts}/${id}`);
+
+  getProduct(id: number) {
+    return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
   addProduct(productDto: ProductDto) {
     productDto = this.checkDto(productDto);
-    return this.http.post<Product>(`${environment.apiProducts}`, productDto);
+
+    return this.http.post<Product>(
+      this.apiUrl,
+      productDto
+    );
   }
 
-  editProduct(id: string, productDto: ProductDto) {
+  editProduct(id: number, productDto: ProductDto) {
     productDto = this.checkDto(productDto);
-    return this.http.put(`${environment.apiProducts}/${id}`, productDto);
+
+    return this.http.put(
+      `${this.apiUrl}/${id}`,
+      productDto
+    );
   }
 
-  deleteLocation(id: string) {
-    return this.http.delete(`${environment.apiProducts}/${id}`);
+  deleteProduct(id: number) {
+    return this.http.delete(
+      `${this.apiUrl}/${id}`
+    );
   }
 }

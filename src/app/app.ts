@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToasterNotification } from './components/toaster-notification/toaster-notification';
-import { BackendErrorService} from './service/backend-error-service/backend-error.service';
+import { BackendErrorService } from './service/backend-error-service/backend-error.service';
 
 @Component({
   imports: [RouterOutlet, ToasterNotification],

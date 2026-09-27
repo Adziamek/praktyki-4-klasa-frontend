@@ -35,7 +35,7 @@ export class CartService {
     )
   );
 
-  add(productId: string): void {
+  add(productId: number): void {
     this.itemsSignal.update(items => {
       const existing = items.find(x => x.productId === productId);
 
@@ -57,13 +57,13 @@ export class CartService {
     });
   }
 
-  remove(productId: string): void {
+  remove(productId: number): void {
     this.itemsSignal.update(items =>
       items.filter(x => x.productId !== productId)
     );
   }
 
-  decrease(productId: string): void {
+  decrease(productId: number): void {
     this.itemsSignal.update(items =>
       items
         .map(x =>

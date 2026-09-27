@@ -1,5 +1,5 @@
 export interface Category {
-  id: bigint;
+  id: number;
   name: string;
   description: string;
 }

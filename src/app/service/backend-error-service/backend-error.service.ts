@@ -35,7 +35,8 @@ export class BackendErrorService {
         this.toastService.show({
           id: 'backend',
           title: 'Connection error: Backend',
-          message: 'Backend nie jest podłączony'
+          message: 'Backend nie jest podłączony',
+          variant: 'danger'
         });
       }
     });

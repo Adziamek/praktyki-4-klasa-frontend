@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { ToastNotificationService} from '../../service/toast-service/toast.service';
+import { NgClass } from '@angular/common';
+import { ToastNotificationService } from '../../service/toast-service/toast.service';
 
 @Component({
   selector: 'app-toaster-notification',
+  imports: [NgClass],
   templateUrl: './toaster-notification.html',
   styleUrl: './toaster-notification.css'
 })
