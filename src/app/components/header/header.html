@@ -8,6 +8,10 @@
 
         <app-nav-element navText="Products" routerLink="/products" [condition]="isAdministrator() || isWarehouseman()" />
 
+        <app-nav-element navText="Products" routerLink="/catalog" [condition]="isUser()" />
+
+        <app-nav-element navText="My orders" routerLink="/my-orders" [condition]="isUser()" />
+
         <app-nav-element navText="Locations" routerLink="/locations" [condition]="isAdministrator() || isWarehouseman()" />
 
         <app-nav-element navText="Settings" routerLink="/settings" />

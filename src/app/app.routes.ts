@@ -11,6 +11,8 @@ import { Products } from './main/products/products';
 
 import { LandingPage } from './main/landing/landing';
 import {ShoppingCart} from './main/shopping-cart/shopping-cart';
+import { Catalog } from './main/catalog/catalog';
+import { MyOrders } from './main/my-orders/my-orders';
 
 export const routes: Routes = [
     {
@@ -53,7 +55,29 @@ export const routes: Routes = [
             {
               path: 'products',
               component: Products,
-              canActivate: [authGuard]
+              canActivate: [authGuard],
+              data: {
+                roles: [
+                  Roles.Administrator,
+                  Roles.Warehouseman
+                ]
+              }
+            },
+            {
+              path: 'catalog',
+              component: Catalog,
+              canActivate: [authGuard],
+              data: {
+                roles: [Roles.User]
+              }
+            },
+            {
+              path: 'my-orders',
+              component: MyOrders,
+              canActivate: [authGuard],
+              data: {
+                roles: [Roles.User]
+              }
             },
             {
               path: 'cart',
