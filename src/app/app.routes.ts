@@ -10,6 +10,7 @@ import { Settings } from './main/settings/settings';
 import { Products } from './main/products/products';
 
 import { LandingPage } from './main/landing/landing';
+import {ShoppingCart} from './main/shopping-cart/shopping-cart';
 
 export const routes: Routes = [
     {
@@ -52,6 +53,11 @@ export const routes: Routes = [
             {
               path: 'products',
               component: Products,
+              canActivate: [authGuard]
+            },
+            {
+              path: 'cart',
+              component: ShoppingCart,
               canActivate: [authGuard]
             }
         ]

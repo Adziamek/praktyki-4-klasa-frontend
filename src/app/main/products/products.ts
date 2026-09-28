@@ -1,25 +1,29 @@
 import { Component, signal, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ProductService } from '../../service/products-service/product.service'; 
-import { InputString } from '../../components/input-string/input-string'; 
+import { ProductService } from '../../service/products-service/product.service';
+import { InputString } from '../../components/input-string/input-string';
 import { InputSelect } from '../../components/input-select/input-select';
-import { InfoErrorBox } from '../../components/info-error-box/info-error-box'; 
+import { InfoErrorBox } from '../../components/info-error-box/info-error-box';
 import { SubmitButton } from '../../components/submit-button/submit-button';
 import { Product } from '../../service/products-service/product';
 import { ProductDto } from '../../service/products-service/product-dto';
 import { Category } from '../../service/category-service/category';
 import { Brand } from '../../service/brand-service/brand';
+import { Location } from '../../service/location-service/location';
 import { CategoryService } from '../../service/category-service/category.service';
 import { BrandService } from '../../service/brand-service/brand.service';
-import { ErrorService } from '../../service/error-serivce/error.service';
-
+import { LocationsService } from '../../service/location-service/locations.service';
+import { ErrorService } from '../../service/error-service/error.service';
+import { CartService } from '../../service/cart-service/cart.service';
+import { ToastNotificationService } from '../../service/toast-service/toast.service';
 @Component({
   imports: [
     FormsModule,
     InputString,
     InfoErrorBox,
     SubmitButton,
-    InputSelect
+    InputSelect,
+
   ],
   selector: 'app-products',
   styleUrl: './products.css',
@@ -31,6 +35,9 @@ export class Products implements OnInit {
   private brandService = inject(BrandService);
   private errorService = inject(ErrorService);
   private changeDetector = inject(ChangeDetectorRef);
+  private cartService = inject(CartService);
+  private toastNotificationService = inject(ToastNotificationService);
+  private locationsService = inject(LocationsService);
 
   isSideOpen = signal(false);
   isEditOpen = signal(false);
@@ -39,20 +46,24 @@ export class Products implements OnInit {
   products: Product[] = [];
   categories: Category[] = [];
   brands: Brand[] = [];
+  locations: Location[] = [];
 
   addProductData: ProductDto = {
     name: '',
     ean: '',
     categoryId: -1,
-    brandId: -1
+    brandId: -1,
+    price: 0,
+    locations: []
   };
-  
-  id = '';
+  id = 0;
   editProductData: ProductDto = {
     name: '',
     ean: '',
     categoryId: -1,
-    brandId: -1
+    brandId: -1,
+    price: 0,
+    locations: []
   };
 
   infoMessage = signal('');
@@ -62,6 +73,7 @@ export class Products implements OnInit {
   ngOnInit(): void {
     this.showProducts();
     this.getCategoriesAndBrands();
+    this.getLocations();
   }
 
   openCloseSide() {
@@ -71,26 +83,39 @@ export class Products implements OnInit {
         this.clearMessages();
   }
 
-  openEdit(id: string) {
+  openEdit(id: number) {
     let product = this.products.find(x => x.id === id);
 
     if (product == null)
-        return;
+      return;
 
     this.id = id;
-    this.editProductData = {
-        name: product.name,
-        ean: product.ean,
-        categoryId: product.categoryId,
-        brandId: product.brandId
-    };
 
-    this.clearMessages();
+    this.productService.getProduct(id).subscribe({
+      next: productDetails => {
+        this.editProductData = {
+          name: productDetails.name,
+          ean: productDetails.ean,
+          categoryId: productDetails.categoryId,
+          brandId: productDetails.brandId,
+          price: productDetails.price,
+          locations: productDetails.locations.map(location => ({
+            locationId: location.locationId,
+            quantity: location.quantity
+          }))
+        };
 
-    if (this.isSideOpen())
-        this.openCloseSide();
+        this.clearMessages();
 
-    this.isEditOpen.set(true);
+        if (this.isSideOpen())
+          this.openCloseSide();
+
+        this.isEditOpen.set(true);
+      },
+      error: error => {
+        console.error('Error loading product:', error);
+      }
+    });
   }
 
   closeEdit() {
@@ -98,21 +123,30 @@ export class Products implements OnInit {
     this.clearMessages();
   }
 
-  openDelete(id: string) {
+  addEditProductLocation() {
+    this.editProductData.locations.push({
+      locationId: -1,
+      quantity: 0
+    });
+  }
+
+  removeEditProductLocation(index: number) {
+    this.editProductData.locations.splice(index, 1);
+  }
+
+  openDelete(id: number) {
     if (this.isSideOpen())
       this.openCloseSide();
 
     this.closeEdit();
-
     this.clearMessages();
 
     this.id = id;
     this.isDeleteOpen.set(true);
-
   }
 
   closeDelete() {
-    this.id = '';
+    this.id = 0;
     this.isDeleteOpen.set(false);
     this.clearMessages();
   }
@@ -125,13 +159,14 @@ export class Products implements OnInit {
 
   showProducts() {
     this.productService.getProducts().subscribe({
-        next: products => {
-            this.products = products;
-            this.changeDetector.detectChanges();
-        },
-        error: error => {
-            console.error('Error:', error);
-        }
+      next: products => {
+
+        this.products = products;
+        this.changeDetector.detectChanges();
+      },
+      error: error => {
+        console.error('Error:', error);
+      }
     });
   }
 
@@ -153,10 +188,26 @@ export class Products implements OnInit {
           console.error('Error:', error);
       }
     })
-
-    console.log(this.categories + " | " + this.brands);
   }
-
+  getLocations() {
+    this.locationsService.getAllLocations().subscribe({
+      next: locations => {
+        this.locations = locations.filter(x => x.isActive);
+      },
+      error: error => {
+        console.error('Error loading locations:', error);
+      }
+    });
+  }
+  addProductLocation() {
+    this.addProductData.locations.push({
+      locationId: -1,
+      quantity: 0
+    });
+  }
+  removeProductLocation(index: number) {
+    this.addProductData.locations.splice(index, 1);
+  }
   addProduct() {
       this.clearMessages();
 
@@ -193,14 +244,31 @@ export class Products implements OnInit {
   }
 
   deleteProduct() {
-      this.productService.deleteLocation(this.id).subscribe({
-          next: () => {
-              this.infoMessage.set("Product deleted.");
-              this.showProducts();
-          },
-          error: (error) => {
-              this.errorMessage.set(this.errorService.getDetail(error, 'Deleting failed. Please try again.'));
-          }
-      })
+    this.productService.deleteProduct(this.id).subscribe({
+      next: () => {
+        this.infoMessage.set('Product deleted.');
+        this.isDeleteOpen.set(false);
+        this.id = 0;
+
+        this.showProducts();
+      },
+      error: (error) => {
+        this.errorMessage.set(
+          this.errorService.getDetail(
+            error,
+            'Deleting failed. Please try again.'
+          )
+        );
+      }
+    });
+  }
+  addToCart(productId: number) {
+    this.cartService.add(productId);
+    this.toastNotificationService.show({
+      id: 'cart',
+      title: 'cart',
+      message: 'Product added to cart!',
+      variant: 'success'
+    });
   }
 }

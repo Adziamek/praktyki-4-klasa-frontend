@@ -1,0 +1,44 @@
+<div class="container">
+
+  <h2>Koszyk</h2>
+
+  @if (products().length === 0) {
+    <p>Koszyk jest pusty.</p>
+  }
+
+  @for (product of products(); track product.id) {
+    <div class="d-flex align-items-center gap-3 border-bottom py-3">
+
+      <div class="flex-grow-1">
+        <strong>{{ product.name }}</strong>
+        <div>EAN: {{ product.ean }}</div>
+      </div>
+
+      <button
+        class="btn btn-secondary"
+        (click)="decrease(product.id)">
+        -
+      </button>
+
+      <span>
+        {{ getQuantity(product.id) }}
+      </span>
+
+      <button
+        class="btn btn-secondary"
+        (click)="increase(product.id)">
+        +
+      </button>
+
+      <button
+        class="btn btn-danger"
+        (click)="remove(product.id)">
+        🗑
+      </button>
+
+    </div>
+  }
+  <app-submit-button buttonText="Clear Cart" (click)="clear()"/>
+
+  <app-submit-button buttonText="Checkout" (click)="checkoutCart()" />
+</div>
