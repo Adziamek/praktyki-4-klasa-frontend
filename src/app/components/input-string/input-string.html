@@ -8,7 +8,7 @@
         [name]="name()"
         [placeholder]="placeholder()"
         [value]="value()"
-        (input)="valueChange.emit($any($event.target).value)"
+        (input)="onInput($event)"
         [required]="required()"
     >
 

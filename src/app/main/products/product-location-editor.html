@@ -1,0 +1,56 @@
+<div class="mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h6 class="mb-0">Locations</h6>
+    <button type="button" class="btn btn-sm btn-primary" (click)="addRow()">
+      + Add location
+    </button>
+  </div>
+
+  <table class="table table-sm align-middle">
+    <thead>
+      <tr>
+        <th>Location</th>
+        <th style="width: 120px;">Quantity</th>
+        <th style="width: 60px;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track row) {
+        <tr>
+          <td>
+            <app-input-select
+              label=""
+              [id]="namePrefix() + '-location-' + $index"
+              [name]="namePrefix() + '-location-' + $index"
+              placeholder="Select location"
+              [options]="locations()"
+              [value]="row.locationId"
+              (valueChange)="updateLocation($index, $event)"
+              [required]="true"
+            />
+          </td>
+          <td>
+            <input
+              type="number"
+              class="form-control"
+              min="0"
+              [name]="namePrefix() + '-quantity-' + $index"
+              [ngModel]="row.quantity"
+              (ngModelChange)="updateQuantity($index, $event)"
+              required
+            />
+          </td>
+          <td class="text-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-danger"
+              [attr.aria-label]="'Remove ' + namePrefix() + ' location ' + ($index + 1)"
+              (click)="removeRow($index)">
+              🗑
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -16,4 +16,11 @@ export class InputString  {
   required = input<boolean>(false);
 
   valueChange = output<string>();
+
+  onInput(event: Event): void {
+    const target = event.target;
+    if (target instanceof HTMLInputElement) {
+      this.valueChange.emit(target.value);
+    }
+  }
 }
