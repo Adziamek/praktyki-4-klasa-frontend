@@ -1,0 +1,39 @@
+<div class="mx-auto" style="max-width: 90%;">
+    <h2>My orders</h2>
+
+    @if (errorMessage()) {
+        <div class="alert alert-danger">{{ errorMessage() }}</div>
+    }
+
+    @for (order of orders(); track order.id) {
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between">
+                <span>Order #{{ order.id }} | {{ order.createdAt | date: 'yyyy-MM-dd HH:mm' }}</span>
+                <span>{{ order.status }}</span>
+            </div>
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Unit price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of order.items; track item.id) {
+                        <tr>
+                            <td>{{ getProductName(item.productId) }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.unitPrice }}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="card-footer text-end">Total: {{ getTotal(order) }}</div>
+        </div>
+    } @empty {
+        @if (!errorMessage()) {
+            <p>You have no orders yet.</p>
+        }
+    }
+</div>

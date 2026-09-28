@@ -1,0 +1,38 @@
+<div class="mx-auto" style="max-width: 90%;">
+    <h2>Products</h2>
+
+    @if (errorMessage()) {
+        <div class="alert alert-danger">{{ errorMessage() }}</div>
+    }
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Ean</th>
+                <th scope="col">Category</th>
+                <th scope="col">Brand</th>
+                <th scope="col">Price</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Add to cart</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (product of products(); track product.id) {
+                <tr>
+                    <td scope="row">{{ product.name }}</td>
+                    <td>{{ product.ean }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.brand }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td><button class="btn btn-success" (click)="addToCart(product.id)">+</button></td>
+                </tr>
+            } @empty {
+                <tr>
+                    <td colspan="7" class="text-center">No products.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

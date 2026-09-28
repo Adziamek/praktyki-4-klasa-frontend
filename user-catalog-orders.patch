@@ -1,0 +1,380 @@
+From 2ceb863ebd9513bf8e29ce99a3101b0781c3ceed Mon Sep 17 00:00:00 2001
+From: Brycka <brycka@example.com>
+Date: Mon, 28 Sep 2026 13:52:42 +0000
+Subject: [PATCH] Add read-only product catalog and my orders view for User
+ role
+
+---
+ src/app/app.routes.ts                         | 26 +++++++++-
+ src/app/components/header/header.html         |  4 ++
+ src/app/main/catalog/catalog.html             | 38 +++++++++++++++
+ src/app/main/catalog/catalog.ts               | 38 +++++++++++++++
+ src/app/main/dashboard/dashboard.html         |  2 +
+ src/app/main/dashboard/dashboard.ts           | 26 ++++++----
+ src/app/main/my-orders/my-orders.html         | 39 +++++++++++++++
+ src/app/main/my-orders/my-orders.ts           | 48 +++++++++++++++++++
+ .../service/order-service/customer-order.ts   | 14 ++++++
+ .../service/order-service/order.service.ts    | 30 ++++++++++++
+ 10 files changed, 254 insertions(+), 11 deletions(-)
+ create mode 100644 src/app/main/catalog/catalog.html
+ create mode 100644 src/app/main/catalog/catalog.ts
+ create mode 100644 src/app/main/my-orders/my-orders.html
+ create mode 100644 src/app/main/my-orders/my-orders.ts
+ create mode 100644 src/app/service/order-service/customer-order.ts
+ create mode 100644 src/app/service/order-service/order.service.ts
+
+diff --git a/src/app/app.routes.ts b/src/app/app.routes.ts
+index 0715449..4c21737 100644
+--- a/src/app/app.routes.ts
++++ b/src/app/app.routes.ts
+@@ -11,6 +11,8 @@ import { Products } from './main/products/products';
+ 
+ import { LandingPage } from './main/landing/landing';
+ import {ShoppingCart} from './main/shopping-cart/shopping-cart';
++import { Catalog } from './main/catalog/catalog';
++import { MyOrders } from './main/my-orders/my-orders';
+ 
+ export const routes: Routes = [
+     {
+@@ -53,7 +55,29 @@ export const routes: Routes = [
+             {
+               path: 'products',
+               component: Products,
+-              canActivate: [authGuard]
++              canActivate: [authGuard],
++              data: {
++                roles: [
++                  Roles.Administrator,
++                  Roles.Warehouseman
++                ]
++              }
++            },
++            {
++              path: 'catalog',
++              component: Catalog,
++              canActivate: [authGuard],
++              data: {
++                roles: [Roles.User]
++              }
++            },
++            {
++              path: 'my-orders',
++              component: MyOrders,
++              canActivate: [authGuard],
++              data: {
++                roles: [Roles.User]
++              }
+             },
+             {
+               path: 'cart',
+diff --git a/src/app/components/header/header.html b/src/app/components/header/header.html
+index 96509d9..66efc2f 100644
+--- a/src/app/components/header/header.html
++++ b/src/app/components/header/header.html
+@@ -8,6 +8,10 @@
+ 
+         <app-nav-element navText="Products" routerLink="/products" [condition]="isAdministrator() || isWarehouseman()" />
+ 
++        <app-nav-element navText="Products" routerLink="/catalog" [condition]="isUser()" />
++
++        <app-nav-element navText="My orders" routerLink="/my-orders" [condition]="isUser()" />
++
+         <app-nav-element navText="Locations" routerLink="/locations" [condition]="isAdministrator() || isWarehouseman()" />
+ 
+         <app-nav-element navText="Settings" routerLink="/settings" />
+diff --git a/src/app/main/catalog/catalog.html b/src/app/main/catalog/catalog.html
+new file mode 100644
+index 0000000..9f3219d
+--- /dev/null
++++ b/src/app/main/catalog/catalog.html
+@@ -0,0 +1,38 @@
++<div class="mx-auto" style="max-width: 90%;">
++    <h2>Products</h2>
++
++    @if (errorMessage()) {
++        <div class="alert alert-danger">{{ errorMessage() }}</div>
++    }
++
++    <table class="table">
++        <thead>
++            <tr>
++                <th scope="col">Name</th>
++                <th scope="col">Ean</th>
++                <th scope="col">Category</th>
++                <th scope="col">Brand</th>
++                <th scope="col">Price</th>
++                <th scope="col">Stock</th>
++                <th scope="col">Add to cart</th>
++            </tr>
++        </thead>
++        <tbody>
++            @for (product of products(); track product.id) {
++                <tr>
++                    <td scope="row">{{ product.name }}</td>
++                    <td>{{ product.ean }}</td>
++                    <td>{{ product.category }}</td>
++                    <td>{{ product.brand }}</td>
++                    <td>{{ product.price }}</td>
++                    <td>{{ product.quantity }}</td>
++                    <td><button class="btn btn-success" (click)="addToCart(product.id)">+</button></td>
++                </tr>
++            } @empty {
++                <tr>
++                    <td colspan="7" class="text-center">No products.</td>
++                </tr>
++            }
++        </tbody>
++    </table>
++</div>
+diff --git a/src/app/main/catalog/catalog.ts b/src/app/main/catalog/catalog.ts
+new file mode 100644
+index 0000000..a353df2
+--- /dev/null
++++ b/src/app/main/catalog/catalog.ts
+@@ -0,0 +1,38 @@
++import { Component, OnInit, inject, signal } from '@angular/core';
++import { ProductService } from '../../service/products-service/product.service';
++import { CartService } from '../../service/cart-service/cart.service';
++import { ToastNotificationService } from '../../service/toast-service/toast.service';
++import { Product } from '../../service/products-service/product';
++
++@Component({
++  selector: 'app-catalog',
++  templateUrl: './catalog.html',
++})
++export class Catalog implements OnInit {
++  private productService = inject(ProductService);
++  private cartService = inject(CartService);
++  private toastNotificationService = inject(ToastNotificationService);
++
++  products = signal<Product[]>([]);
++  errorMessage = signal('');
++
++  ngOnInit(): void {
++    this.productService.getProducts().subscribe({
++      next: products => this.products.set(products),
++      error: error => {
++        console.error('Error:', error);
++        this.errorMessage.set('Could not load products.');
++      }
++    });
++  }
++
++  addToCart(productId: number) {
++    this.cartService.add(productId);
++    this.toastNotificationService.show({
++      id: 'cart',
++      title: 'cart',
++      message: 'Product added to cart!',
++      variant: 'success'
++    });
++  }
++}
+diff --git a/src/app/main/dashboard/dashboard.html b/src/app/main/dashboard/dashboard.html
+index 45d3710..75009fc 100644
+--- a/src/app/main/dashboard/dashboard.html
++++ b/src/app/main/dashboard/dashboard.html
+@@ -10,7 +10,9 @@
+     <h2>Summary:</h2>
+     <ul class="list-group list-group-flush">
+         <li class="list-group-item">Amount of products: {{ productsCount }}</li>
++        @if (!isUser()) {
+         <li class="list-group-item">Amount of locations: {{ locationsCount }}</li>
++        }
+     </ul>
+ 
+     @if (errorMessage) {
+diff --git a/src/app/main/dashboard/dashboard.ts b/src/app/main/dashboard/dashboard.ts
+index b5404a3..50054ff 100644
+--- a/src/app/main/dashboard/dashboard.ts
++++ b/src/app/main/dashboard/dashboard.ts
+@@ -35,15 +35,21 @@ export class Dashboard {
+       },
+     });
+ 
+-    this.locationsService.getAllLocations().subscribe({
+-      next: locations => {
+-        this.locationsCount = locations.length;
+-        this.changeDetector.detectChanges();
+-      },
+-      error: error => {
+-        this.errorMessage += "Can't connect to database.";
+-        console.error('Error:', error);
+-      }
+-    });
++    if (!this.isUser()) {
++      this.locationsService.getAllLocations().subscribe({
++        next: locations => {
++          this.locationsCount = locations.length;
++          this.changeDetector.detectChanges();
++        },
++        error: error => {
++          this.errorMessage += "Can't connect to database.";
++          console.error('Error:', error);
++        }
++      });
++    }
++  }
++
++  isUser() {
++    return this.authService.isUser();
+   }
+ }
+diff --git a/src/app/main/my-orders/my-orders.html b/src/app/main/my-orders/my-orders.html
+new file mode 100644
+index 0000000..3b8322a
+--- /dev/null
++++ b/src/app/main/my-orders/my-orders.html
+@@ -0,0 +1,39 @@
++<div class="mx-auto" style="max-width: 90%;">
++    <h2>My orders</h2>
++
++    @if (errorMessage()) {
++        <div class="alert alert-danger">{{ errorMessage() }}</div>
++    }
++
++    @for (order of orders(); track order.id) {
++        <div class="card mb-3">
++            <div class="card-header d-flex justify-content-between">
++                <span>Order #{{ order.id }} | {{ order.createdAt | date: 'yyyy-MM-dd HH:mm' }}</span>
++                <span>{{ order.status }}</span>
++            </div>
++            <table class="table mb-0">
++                <thead>
++                    <tr>
++                        <th scope="col">Product</th>
++                        <th scope="col">Quantity</th>
++                        <th scope="col">Unit price</th>
++                    </tr>
++                </thead>
++                <tbody>
++                    @for (item of order.items; track item.id) {
++                        <tr>
++                            <td>{{ getProductName(item.productId) }}</td>
++                            <td>{{ item.quantity }}</td>
++                            <td>{{ item.unitPrice }}</td>
++                        </tr>
++                    }
++                </tbody>
++            </table>
++            <div class="card-footer text-end">Total: {{ getTotal(order) }}</div>
++        </div>
++    } @empty {
++        @if (!errorMessage()) {
++            <p>You have no orders yet.</p>
++        }
++    }
++</div>
+diff --git a/src/app/main/my-orders/my-orders.ts b/src/app/main/my-orders/my-orders.ts
+new file mode 100644
+index 0000000..15182de
+--- /dev/null
++++ b/src/app/main/my-orders/my-orders.ts
+@@ -0,0 +1,48 @@
++import { Component, OnInit, inject, signal } from '@angular/core';
++import { DatePipe } from '@angular/common';
++import { OrderService } from '../../service/order-service/order.service';
++import { ProductService } from '../../service/products-service/product.service';
++import { CustomerOrder } from '../../service/order-service/customer-order';
++
++@Component({
++  imports: [DatePipe],
++  selector: 'app-my-orders',
++  templateUrl: './my-orders.html',
++})
++export class MyOrders implements OnInit {
++  private orderService = inject(OrderService);
++  private productService = inject(ProductService);
++
++  orders = signal<CustomerOrder[]>([]);
++  productNames = signal<Record<number, string>>({});
++  errorMessage = signal('');
++
++  ngOnInit(): void {
++    this.productService.getProducts().subscribe({
++      next: products => {
++        const names: Record<number, string> = {};
++        products.forEach(product => names[product.id] = product.name);
++        this.productNames.set(names);
++      },
++      error: error => console.error('Error:', error)
++    });
++
++    this.orderService.getMyOrders().subscribe({
++      next: orders => this.orders.set(
++        [...orders].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
++      ),
++      error: error => {
++        console.error('Error:', error);
++        this.errorMessage.set('Could not load orders.');
++      }
++    });
++  }
++
++  getProductName(productId: number): string {
++    return this.productNames()[productId] ?? `#${productId}`;
++  }
++
++  getTotal(order: CustomerOrder): number {
++    return order.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
++  }
++}
+diff --git a/src/app/service/order-service/customer-order.ts b/src/app/service/order-service/customer-order.ts
+new file mode 100644
+index 0000000..3053d9b
+--- /dev/null
++++ b/src/app/service/order-service/customer-order.ts
+@@ -0,0 +1,14 @@
++export interface OrderItem {
++  id: number;
++  productId: number;
++  quantity: number;
++  unitPrice: number;
++}
++
++export interface CustomerOrder {
++  id: number;
++  userId: number;
++  status: string;
++  createdAt: string;
++  items: OrderItem[];
++}
+diff --git a/src/app/service/order-service/order.service.ts b/src/app/service/order-service/order.service.ts
+new file mode 100644
+index 0000000..ca6dc45
+--- /dev/null
++++ b/src/app/service/order-service/order.service.ts
+@@ -0,0 +1,30 @@
++import { Injectable, inject } from '@angular/core';
++import { HttpClient } from '@angular/common/http';
++import { Observable, map, switchMap } from 'rxjs';
++import { environment } from '../../environments/environment/environment';
++import { CustomerOrder } from './customer-order';
++
++interface CurrentUser {
++  id: number;
++}
++
++@Injectable({
++  providedIn: 'root'
++})
++export class OrderService {
++  private http = inject(HttpClient);
++
++  private usersApi = `${environment.apiUsers}`;
++  private ordersApi = `${environment.apiOrders}`;
++
++  // Zwraca tylko zamowienia zalogowanego uzytkownika
++  getMyOrders(): Observable<CustomerOrder[]> {
++    return this.http.get<CurrentUser>(`${this.usersApi}/me`).pipe(
++      switchMap(user =>
++        this.http.get<CustomerOrder[]>(this.ordersApi).pipe(
++          map(orders => orders.filter(order => order.userId === user.id))
++        )
++      )
++    );
++  }
++}
+-- 
+2.43.0
+
